@@ -7,7 +7,16 @@ public enum MenuOptions
 	MetaMagic,
     Magic,
     Items,
-	Run
+	Run,
+    Attack,
+    Feint,
+    Parry
+}
+
+public enum MenuType
+{
+    Main,
+    Sub
 }
 
 public enum MenuButtonState
@@ -21,12 +30,12 @@ public class BattleUI : MonoBehaviour
 {
 
     public Texture menuBoxBackground;
-
-
+    
     public Texture menuOptionTextureOff;
     public Texture menuOptionTextureOn;
     public Texture menuOptionTextureLock;
 
+    public bool drawSub = false;
 
     [HideInInspector]
     public MenuButtonState skillsMenuState;
@@ -38,38 +47,51 @@ public class BattleUI : MonoBehaviour
     public MenuButtonState itemMenuState;
     [HideInInspector]
     public MenuButtonState runMenuState;
-    
-    
-    
+    [HideInInspector]
+    public MenuButtonState option1State;
+    [HideInInspector]
+    public MenuButtonState option2State;
+    [HideInInspector]
+    public MenuButtonState option3State;
+    [HideInInspector]
+    public MenuButtonState option4State;
+    [HideInInspector]
+    public MenuButtonState option5State;
+    [HideInInspector]
+    public MenuButtonState option6State;
+
 	// Use this for initialization
 	void Start () 
     {
-
         skillsMenuState = MenuButtonState.On;
         metaMagicMenuState = MenuButtonState.Off;
         magicMenuState = MenuButtonState.Off;
         itemMenuState = MenuButtonState.Off;
         runMenuState = MenuButtonState.Off;
+        option1State = MenuButtonState.Off;
+        option2State = MenuButtonState.Off;
+        option3State = MenuButtonState.Off;
 	}
 	
-	// Update is called once per frame
-	void Update () 
-    {
-	
-	}
-
 	void OnGUI () 
     {
+        //background
         DrawMenuBox();
 
-        DrawOption(0, MenuOptions.Skills,skillsMenuState);
-        DrawOption(1, MenuOptions.MetaMagic, metaMagicMenuState);
-        DrawOption(2, MenuOptions.Magic, magicMenuState);
-        DrawOption(3, MenuOptions.Items, itemMenuState);
-        DrawOption(4, MenuOptions.Run, runMenuState);
+        //Main Menu
+        DrawOption(MenuType.Main, 0, MenuOptions.Skills,skillsMenuState);
+        DrawOption(MenuType.Main, 1, MenuOptions.MetaMagic, metaMagicMenuState);
+        DrawOption(MenuType.Main, 2, MenuOptions.Magic, magicMenuState);
+        DrawOption(MenuType.Main, 3, MenuOptions.Items, itemMenuState);
+        DrawOption(MenuType.Main, 4, MenuOptions.Run, runMenuState);
 
-
-
+        //Sub Menu
+        if (drawSub)
+        {
+            DrawOption(MenuType.Sub, 0, MenuOptions.Attack, option1State);
+            DrawOption(MenuType.Sub, 1, MenuOptions.Parry, option2State);
+            DrawOption(MenuType.Sub, 2, MenuOptions.Feint, option3State);
+        }
 	}
 
     void DrawMenuBox()
@@ -77,11 +99,22 @@ public class BattleUI : MonoBehaviour
         GUI.DrawTexture(new Rect(10, 10, 100, (18*5)), menuBoxBackground);
     }
 
-    void DrawOption(int selectionNumber,MenuOptions selectedOption,MenuButtonState inputState)
+    void DrawOption(MenuType type, int selectionNumber,MenuOptions selectedOption,MenuButtonState inputState)
     {
-        int h = (10 + (18 * selectionNumber));
-        GUI.DrawTexture(new Rect(10, h, 100, 20), StateToTexture(inputState));
-        GUI.Label(new Rect(25, h, 100, 20), selectedOption.ToString());
+        switch (type)
+        {
+            case MenuType.Main:
+                int h = (10 + (18 * selectionNumber));
+                GUI.DrawTexture(new Rect(10, h, 100, 20), StateToTexture(inputState));
+                GUI.Label(new Rect(25, h, 100, 20), selectedOption.ToString());
+                break;
+            case MenuType.Sub:
+                int i = (10 + (18 * selectionNumber));
+                GUI.DrawTexture(new Rect(110, i, 100, 20), StateToTexture(inputState));
+                GUI.Label(new Rect((110+25), i, 100, 20), selectedOption.ToString());
+                break;
+        }
+        
     }
 
     Texture StateToTexture(MenuButtonState state)
@@ -103,5 +136,4 @@ public class BattleUI : MonoBehaviour
 
         return outputTexture;
     }
-
 }
