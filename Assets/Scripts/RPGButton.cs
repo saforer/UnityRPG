@@ -15,7 +15,27 @@ public class RPGButton {
         textureOn = inOn;
         textureOff = inOff;
         textureLock = inLock;
-        
+
         buttonName = inName;
+    }
+
+    public Texture MenuTexture () 
+    {
+        Texture outputTexture = null;
+
+        switch (currentState)
+        {
+            case MenuButtonState.Off:
+                outputTexture = textureOff;
+                break;
+            case MenuButtonState.On:
+                outputTexture = textureOn;
+                break;
+            case MenuButtonState.Locked:
+                outputTexture = textureLock;
+                break;
+        }
+
+        return outputTexture;
     }
 }

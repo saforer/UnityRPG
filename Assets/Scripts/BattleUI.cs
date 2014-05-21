@@ -69,24 +69,9 @@ public class BattleUI : MonoBehaviour
 
     void DrawOption(RPGButton buttonIn, int selectionNumber)
     {
+
         int h = (10 + (18 * selectionNumber));
-        
-        Texture usedTexture = null;
-
-        switch (buttonIn.currentState)
-        {
-            case MenuButtonState.Off:
-                usedTexture = buttonIn.textureOff;
-                break;
-            case MenuButtonState.On:
-                usedTexture = buttonIn.textureOn;
-                break;
-            case MenuButtonState.Locked:
-                usedTexture = buttonIn.textureLock;
-                break;
-        }
-
-        GUI.DrawTexture(new Rect(10, h, 100, 20), usedTexture);
+        GUI.DrawTexture(new Rect(10, h, 100, 20), buttonIn.MenuTexture());
         GUI.Label(new Rect(25, h, 100, 20), buttonIn.buttonName);
     }
 
