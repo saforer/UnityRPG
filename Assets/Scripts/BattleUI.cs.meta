@@ -4,12 +4,9 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - menuBoxBackground: {fileID: 2800000, guid: 2480fb8a4444dc64f98e291e92ba485f, type: 3}
-  - menuOptionTextureOff: {fileID: 2800000, guid: 5bf996e3ac8ebc44c853e047f7d450f7,
-      type: 3}
-  - menuOptionTextureOn: {fileID: 2800000, guid: 9c190ab43782173499a4db7a5d11de03,
-      type: 3}
-  - menuOptionTextureLock: {fileID: 2800000, guid: 65c0a479916d42a44bd6833fe1803929,
-      type: 3}
+  - menuButtonOn: {fileID: 2800000, guid: 9c190ab43782173499a4db7a5d11de03, type: 3}
+  - menuButtonOff: {fileID: 2800000, guid: 2480fb8a4444dc64f98e291e92ba485f, type: 3}
+  - menuButtonLock: {fileID: 2800000, guid: 65c0a479916d42a44bd6833fe1803929, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
