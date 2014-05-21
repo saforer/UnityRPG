@@ -57,9 +57,12 @@ public class BattleUI : MonoBehaviour
 	void OnGUI () 
     {
         DrawMenuBox();
-        DrawAttack();
-        DrawMetaMagic();
-        DrawRun();
+
+        DrawOption(0,MenuOptions.Attack,attackMenuState);
+        DrawOption(1, MenuOptions.MetaMagic, metaMagicMenuState);
+        DrawOption(2, MenuOptions.Run, runMenuState);
+
+
 
 	}
 
@@ -68,62 +71,51 @@ public class BattleUI : MonoBehaviour
         GUI.DrawTexture(new Rect(10, 10, 100, 100), menuBoxBackground);
     }
 
-    void DrawAttack()
+    void DrawOption(int selectionNumber,MenuOptions selectedOption,MenuButtonState inputState)
     {
-
-        switch (attackMenuState)
-        {
-        case MenuButtonState.On:
-            attackMenuTexture = menuOptionTextureOn;
-            break;
-        case MenuButtonState.Off:
-            attackMenuTexture = menuOptionTextureOff;
-            break;
-        case MenuButtonState.Locked:
-            attackMenuTexture = menuOptionTextureLock;
-            break;
-        }        
-
-        GUI.DrawTexture(new Rect(10, 10, 100, 20), attackMenuTexture);
-        GUI.Label(new Rect(45, 10, 100, 20), "Attack");
+        int h = (10 + (18 * selectionNumber));
+        GUI.DrawTexture(new Rect(10, h, 100, 20), StateToTexture(inputState));
+        GUI.Label(new Rect(45, h, 100, 20), StateToText(selectedOption));
     }
 
-    void DrawMetaMagic()
+    Texture StateToTexture(MenuButtonState state)
     {
-        switch (metaMagicMenuState)
+        Texture outputTexture = null;
+
+        switch (state)
         {
-        case MenuButtonState.On:
-            metaMagicMenuTexture = menuOptionTextureOn;
-            break;
-        case MenuButtonState.Off:
-            metaMagicMenuTexture = menuOptionTextureOff;
-            break;
-        case MenuButtonState.Locked:
-            metaMagicMenuTexture = menuOptionTextureLock;
-            break;
-        }        
-        
-        GUI.DrawTexture(new Rect(10, 30-3, 100, 20), metaMagicMenuTexture);
-        GUI.Label(new Rect(30, 30-3, 100, 20), "MetaMagic");
+            case MenuButtonState.On:
+                outputTexture = menuOptionTextureOn;
+                break;
+            case MenuButtonState.Off:
+                outputTexture = menuOptionTextureOff;
+                break;
+            case MenuButtonState.Locked:
+                outputTexture = menuOptionTextureLock;
+                break;
+        }
+
+        return outputTexture;
     }
 
-    void DrawRun()
+    string StateToText(MenuOptions option)
     {
-        switch (runMenuState)
+        string output = "";
+
+        switch (option)
         {
-        case MenuButtonState.On:
-            runMenuTexture = menuOptionTextureOn;
-            break;
-        case MenuButtonState.Off:
-            runMenuTexture = menuOptionTextureOff;
-            break;
-        case MenuButtonState.Locked:
-            runMenuTexture = menuOptionTextureLock;
-            break;
-        }        
-        
-        GUI.DrawTexture(new Rect(10, 50-6, 100, 20), runMenuTexture);
-        GUI.Label(new Rect(50, 50-6, 100, 20), "Run");
+            case MenuOptions.Attack:
+                output = "Attack";
+                break;
+            case MenuOptions.MetaMagic:
+                output = "MetaMagic";
+                break;
+            case MenuOptions.Run:
+                output = "Run";
+                break;
+        }
+
+        return output;
     }
 
 }
