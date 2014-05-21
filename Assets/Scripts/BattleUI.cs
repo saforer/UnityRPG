@@ -27,11 +27,6 @@ public class BattleUI : MonoBehaviour
     public Texture menuOptionTextureOn;
     public Texture menuOptionTextureLock;
 
-    private Texture attackMenuTexture;
-    private Texture metaMagicMenuTexture;
-    private Texture magicMenuTexture;
-    private Texture itemMenuTexture;
-    private Texture runMenuTexture;
 
     [HideInInspector]
     public MenuButtonState skillsMenuState;
@@ -49,11 +44,6 @@ public class BattleUI : MonoBehaviour
 	// Use this for initialization
 	void Start () 
     {
-        attackMenuTexture = menuOptionTextureOff;
-        metaMagicMenuTexture = menuOptionTextureOff;
-        magicMenuTexture = menuOptionTextureOff;
-        itemMenuTexture = menuOptionTextureOff;
-        runMenuTexture = menuOptionTextureOff;
 
         skillsMenuState = MenuButtonState.On;
         metaMagicMenuState = MenuButtonState.Off;
@@ -72,7 +62,7 @@ public class BattleUI : MonoBehaviour
     {
         DrawMenuBox();
 
-        DrawOption(0,MenuOptions.Skills,skillsMenuState);
+        DrawOption(0, MenuOptions.Skills,skillsMenuState);
         DrawOption(1, MenuOptions.MetaMagic, metaMagicMenuState);
         DrawOption(2, MenuOptions.Magic, magicMenuState);
         DrawOption(3, MenuOptions.Items, itemMenuState);
@@ -91,7 +81,7 @@ public class BattleUI : MonoBehaviour
     {
         int h = (10 + (18 * selectionNumber));
         GUI.DrawTexture(new Rect(10, h, 100, 20), StateToTexture(inputState));
-        GUI.Label(new Rect(25, h, 100, 20), StateToText(selectedOption));
+        GUI.Label(new Rect(25, h, 100, 20), selectedOption.ToString());
     }
 
     Texture StateToTexture(MenuButtonState state)
@@ -112,32 +102,6 @@ public class BattleUI : MonoBehaviour
         }
 
         return outputTexture;
-    }
-
-    string StateToText(MenuOptions option)
-    {
-        string output = "";
-
-        switch (option)
-        {
-            case MenuOptions.Skills:
-                output = "Skills";
-                break;
-            case MenuOptions.MetaMagic:
-                output = "MetaMagic";
-                break;
-            case MenuOptions.Items:
-                output = "Items";
-                break;
-            case MenuOptions.Magic:
-                output = "Magic";
-                break;
-            case MenuOptions.Run:
-                output = "Run";
-                break;
-        }
-
-        return output;
     }
 
 }
