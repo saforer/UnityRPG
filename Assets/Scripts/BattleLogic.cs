@@ -31,8 +31,12 @@ public class BattleLogic : MonoBehaviour {
         sublist.Add(new RPGButton("Run", buttonOn, buttonOff, buttonLocked));
 
         sublist[0].AddChild(new RPGButton("Attack", buttonOn, buttonOff, buttonLocked));
-        sublist[0].AddChild(new RPGButton("Parry", buttonOn, buttonOff, buttonLocked));
-        sublist[0].AddChild(new RPGButton("Feint", buttonOn, buttonOff, buttonLocked));
+        sublist[0].AddChild(new RPGButton("Barbarian", buttonOn, buttonOff, buttonLocked));
+        sublist[0].AddChild(new RPGButton("Fighter", buttonOn, buttonOff, buttonLocked));
+
+        sublist[0].children[1].AddChild(new RPGButton("Slash", buttonOn, buttonOff, buttonLocked));
+        sublist[0].children[2].AddChild(new RPGButton("Dodge", buttonOn, buttonOff, buttonLocked));
+        sublist[0].children[2].AddChild(new RPGButton("Parry", buttonOn, buttonOff, buttonLocked));
 
         sublist[1].AddChild(new RPGButton("Analyze", buttonOn, buttonOff, buttonLocked));
         sublist[1].AddChild(new RPGButton("HexEdit", buttonOn, buttonOff, buttonLocked));
