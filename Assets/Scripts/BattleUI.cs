@@ -17,7 +17,7 @@ public class BattleUI : MonoBehaviour
     {
         DrawBackground();
 
-        DrawMenu(currentLogic.totalList);
+        DrawMenu(currentLogic.mainMenu);
         
     }
 
@@ -26,32 +26,30 @@ public class BattleUI : MonoBehaviour
         GUI.DrawTexture(new Rect(10, 10, 100, ((18*5)+2)), backgroundTexture);
     }
 
-    void DrawMenu(List<List<RPGButton>> listToDraw)
+    void DrawMenu (List<RPGmenu> inList)
     {
-        List<List<RPGButton>> tempMaster = listToDraw;
-        int i = 0;
-        foreach (List<RPGButton> sublist in tempMaster)
+        List<RPGmenu> tempList = inList;
+
+        int horiz = 0;
+        foreach (RPGmenu menu in tempList)
         {
-            DrawSubMenu(sublist, i);
-            i++;
+            int vert = 0;
+            foreach (RPGButton button in menu.children)
+            {
+                DrawOption(button,vert,horiz);
+                vert++;
+            }
+
+            horiz++;
         }
     }
 
-    void DrawSubMenu (List<RPGButton> inSublist, int depth)
+    void DrawOption(RPGButton inButton, int inVert, int inHoriz)
     {
-        int j = 0;
-        foreach (RPGButton btn in inSublist)
-        {
-            DrawOption(btn, depth, j);
-            j++;
-        }
+        int h = (10 + (100 * inHoriz));
+        int v = (10 + (18 * inVert));
+        GUI.DrawTexture(new Rect(h, v, 100, 20), inButton.OutputTexture());
+        GUI.Label(new Rect((h + 15), v, 100, 20), inButton.label);
     }
 
-    void DrawOption (RPGButton buttonIn,int inDepth, int optionNumber)
-    {
-        int v = (10 + (18 * optionNumber));
-        int h = (10 + (100 * inDepth));
-        GUI.DrawTexture(new Rect(h, v, 100, 20), buttonIn.OutputTexture());
-        GUI.Label(new Rect((h+15), v, 100, 20), buttonIn.label);
-    }
 }
