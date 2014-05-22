@@ -15,21 +15,24 @@ public class BattleLogic : MonoBehaviour {
 
     RPGButton currentSelection;
 
-    public List<RPGButton> menuList = new List<RPGButton>();
+    public List<List<RPGButton>> totalList = new List<List<RPGButton>>();
+    public List<RPGButton> tempSublist = new List<RPGButton>();
 
     void Start ()
     {
         currentUI = gameObject.GetComponent<BattleUI>();
-        
 
-        menuList.Add(new RPGButton("Skills",buttonOn,buttonOff,buttonLocked));
-        menuList.Add(new RPGButton("MetaMagic", buttonOn, buttonOff, buttonLocked));
-        menuList.Add(new RPGButton("Magic", buttonOn, buttonOff, buttonLocked));
-        menuList.Add(new RPGButton("Items", buttonOn, buttonOff, buttonLocked));
-        menuList.Add(new RPGButton("Run", buttonOn, buttonOff, buttonLocked));
+        List<RPGButton> sublist = new List<RPGButton>();
 
-        currentSelection = menuList[0];
+        sublist.Add(new RPGButton("Skills", buttonOn, buttonOff, buttonLocked));
+        sublist.Add(new RPGButton("MetaMagic", buttonOn, buttonOff, buttonLocked));
+        sublist.Add(new RPGButton("Magic", buttonOn, buttonOff, buttonLocked));
+        sublist.Add(new RPGButton("Items", buttonOn, buttonOff, buttonLocked));
+        sublist.Add(new RPGButton("Run", buttonOn, buttonOff, buttonLocked));
 
+        totalList.Add(sublist);
+
+        currentSelection = totalList[0][0];
     }
 
     void Update()
@@ -40,49 +43,55 @@ public class BattleLogic : MonoBehaviour {
 
     void Controls()
     {
+        
+
         //Basic Navigation
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            if (selectInt>0)
+            if (0 < selectInt)
             {
                 selectInt--;
-                currentSelection = menuList[pointerDepth];
             }
             else
             {
                 selectInt = 0;
-                currentSelection = menuList[pointerDepth];
             }
+
+
+            currentSelection = totalList[pointerDepth][selectInt];
         }
+
+
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            if (selectInt < (menuList.Count - 1))
+            if ((totalList[pointerDepth].Count-1)>selectInt)
             {
                 selectInt++;
-                currentSelection = menuList[pointerDepth];
             }
             else
             {
-                selectInt = menuList.Count - 1;
-                currentSelection = menuList[pointerDepth];
+                selectInt = (totalList[pointerDepth].Count-1);
             }
+
+
+            currentSelection = totalList[pointerDepth][selectInt];
         }
 
         //Depth
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            foreach (RPGButton input in currentSelection.children)
-            {
 
-            }
         }
     }
 
     void ListCleanup()
     {
-        foreach (RPGButton input in menuList)
+        foreach (List<RPGButton> sublist in totalList)
         {
-            input.currentState = buttonState.Off;
+            foreach (RPGButton input in sublist)
+            {
+                input.currentState = buttonState.Off;
+            }
         }
 
         currentSelection.currentState = buttonState.On;
