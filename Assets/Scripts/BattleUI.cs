@@ -6,6 +6,8 @@ public class BattleUI : MonoBehaviour
 {
     private BattleLogic currentLogic;
 
+    public Texture backgroundTexture;
+
     void Start()
     {
         currentLogic = GetComponent<BattleLogic>();
@@ -13,6 +15,8 @@ public class BattleUI : MonoBehaviour
 
     void OnGUI()
     {
+        DrawBackground();
+
         List<RPGButton> toDraw = currentLogic.menuList;
         int i = 0;
         foreach (RPGButton input in toDraw)
@@ -22,10 +26,18 @@ public class BattleUI : MonoBehaviour
         }
     }
 
-    void DrawOption(RPGButton buttonIn, int i)
+    void DrawBackground()
     {
-        int h = (10 + (18 * i));
-        GUI.DrawTexture(new Rect(10, h, 100, 20), buttonIn.OutputTexture());
-        GUI.Label(new Rect(25, h, 100, 20), buttonIn.label);
+        GUI.DrawTexture(new Rect(10, 10, 100, ((18*5)+2)), backgroundTexture);
+    }
+
+    void DrawOption(RPGButton buttonIn, int selectionNumber)
+    {
+        //TEMPORARY
+        int depth = 0;
+        int v = (10 + (18 * selectionNumber));
+        int h = (10 + (100 * depth));
+        GUI.DrawTexture(new Rect(h, v, 100, 20), buttonIn.OutputTexture());
+        GUI.Label(new Rect((h+15), v, 100, 20), buttonIn.label);
     }
 }
