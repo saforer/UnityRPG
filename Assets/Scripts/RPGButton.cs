@@ -1,41 +1,57 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+
+public enum buttonState
+{
+    On,
+    Off,
+    Locked
+}
 
 public class RPGButton {
-    public Texture textureOn;
-    public Texture textureOff;
-    public Texture textureLock;
-    public string buttonName;
-    public MenuButtonState currentState;
-    
-    public RPGButton (Texture inOn, Texture inOff, Texture inLock, string inName) 
+
+    public string label;
+
+    Texture buttonOn;
+    Texture buttonOff;
+    Texture buttonLocked;
+
+    public bool container;
+
+    public buttonState currentState = buttonState.Off;
+
+    public List<RPGButton> children = new List<RPGButton>();
+
+    public RPGButton(string inLabel, Texture inOnTexture, Texture inOffTexture, Texture inLockedTexture) 
     {
-        currentState = MenuButtonState.Off;
-
-        textureOn = inOn;
-        textureOff = inOff;
-        textureLock = inLock;
-
-        buttonName = inName;
+        label = inLabel;
+        buttonOn = inOnTexture;
+        buttonOff = inOffTexture;
+        buttonLocked = inLockedTexture;
     }
 
-    public Texture MenuTexture () 
+    public void AddChild (RPGButton inChild) 
     {
-        Texture outputTexture = null;
+        children.Add(inChild);
+    }
 
+    public Texture OutputTexture ()
+    {
+        Texture output = null;
         switch (currentState)
         {
-            case MenuButtonState.Off:
-                outputTexture = textureOff;
+            case buttonState.On:
+                output = buttonOn;
                 break;
-            case MenuButtonState.On:
-                outputTexture = textureOn;
+            case buttonState.Off:
+                output = buttonOff;
                 break;
-            case MenuButtonState.Locked:
-                outputTexture = textureLock;
+            case buttonState.Locked:
+                output = buttonLocked;
                 break;
         }
 
-        return outputTexture;
+        return output;
     }
 }

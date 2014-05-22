@@ -2,78 +2,30 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public enum MenuOptions 
-{
-	Skills,
-	MetaMagic,
-    Magic,
-    Items,
-	Run,
-    Attack,
-    Feint,
-    Parry
-}
-
-public enum MenuType
-{
-    Main,
-    Sub
-}
-
-public enum MenuButtonState
-{
-    On,
-    Off,
-    Locked
-}
-
 public class BattleUI : MonoBehaviour 
 {
+    private BattleLogic currentLogic;
 
-    public Texture menuBoxBackground;
-
-    public Texture menuButtonOn;
-    public Texture menuButtonOff;
-    public Texture menuButtonLock;
-
-    public bool drawSub = false;
-
-    List<RPGButton> mainOptions = new List<RPGButton>();
-
-	void Start () 
+    void Start()
     {
-        
-        MenuButtonState temp = MenuButtonState.Off;
-        mainOptions.Add(new RPGButton( menuButtonOn, menuButtonOff, menuButtonLock, "Attack"));
+        currentLogic = GetComponent<BattleLogic>();
+    }
 
-	}
-	
-	void OnGUI () 
+    void OnGUI()
     {
-        //background
-        DrawMenuBox();
-
-        //Main Menu
+        List<RPGButton> toDraw = currentLogic.menuList;
         int i = 0;
-        foreach (RPGButton input in mainOptions)
+        foreach (RPGButton input in toDraw)
         {
-            DrawOption(input, i);
+            DrawOption(input,i);
+            i++;
         }
-
-	}
-
-    void DrawMenuBox()
-    {
-        GUI.DrawTexture(new Rect(10, 10, 100, (18*5)), menuBoxBackground);
     }
 
-    void DrawOption(RPGButton buttonIn, int selectionNumber)
+    void DrawOption(RPGButton buttonIn, int i)
     {
-
-        int h = (10 + (18 * selectionNumber));
-        GUI.DrawTexture(new Rect(10, h, 100, 20), buttonIn.MenuTexture());
-        GUI.Label(new Rect(25, h, 100, 20), buttonIn.buttonName);
+        int h = (10 + (18 * i));
+        GUI.DrawTexture(new Rect(10, h, 100, 20), buttonIn.OutputTexture());
+        GUI.Label(new Rect(25, h, 100, 20), buttonIn.label);
     }
-
-    
 }
