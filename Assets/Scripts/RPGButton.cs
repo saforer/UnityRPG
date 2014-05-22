@@ -21,7 +21,7 @@ public class RPGButton {
 
     public buttonState currentState = buttonState.Off;
 
-    public List<RPGButton> children = new List<RPGButton>();
+    public RPGmenu childMenu;
 
     public RPGButton(string inLabel, Texture inOnTexture, Texture inOffTexture, Texture inLockedTexture) 
     {
@@ -29,11 +29,6 @@ public class RPGButton {
         buttonOn = inOnTexture;
         buttonOff = inOffTexture;
         buttonLocked = inLockedTexture;
-    }
-
-    public void AddChild (RPGButton inChild) 
-    {
-        children.Add(inChild);
     }
 
     public Texture OutputTexture ()

@@ -26,21 +26,14 @@ public class BattleUI : MonoBehaviour
         GUI.DrawTexture(new Rect(10, 10, 100, ((18*5)+2)), backgroundTexture);
     }
 
-    void DrawMenu (List<RPGmenu> inList)
+    void DrawMenu (RPGmenu inMenu)
     {
-        List<RPGmenu> tempList = inList;
-
-        int horiz = 0;
-        foreach (RPGmenu menu in tempList)
+        RPGmenu tempMenu = inMenu;
+        int vert = 0;
+        foreach (RPGButton button in tempMenu.children)
         {
-            int vert = 0;
-            foreach (RPGButton button in menu.children)
-            {
-                DrawOption(button,vert,horiz);
-                vert++;
-            }
-
-            horiz++;
+            DrawOption(button,vert,0);
+            vert++;
         }
     }
 

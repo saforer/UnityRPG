@@ -19,21 +19,29 @@ public class RPGmenu {
         TurnOnButton(children[0]);
     }
 
-    public void AddChild (RPGButton inButton) 
+    public void AddChildButton (RPGButton inButton) 
     {
         children.Add(inButton);
     }
 
-    public void MenuDown ()
+    public void MenuDown (int depth)
     {
-        if (selectedOption<(children.Count-1))
+        if (depth == 0)
         {
-            selectedOption++;
-            UpdateButtons();
+            if (selectedOption < (children.Count - 1))
+            {
+                selectedOption++;
+                UpdateButtons();
+            }
+        }
+        else
+        {
+            RPGmenu lowerMenu = children[selectedOption].childMenu;
+            lowerMenu.MenuDown((depth - 1));
         }
     }
 
-    public void MenuUp ()
+    public void MenuUp (int depth)
     {
         if (selectedOption > 0)
         {
@@ -42,6 +50,15 @@ public class RPGmenu {
         }
     }
 
+    public RPGmenu Grow (int depth)
+    {
+        //return RPGmenu 
+    }
+
+    public RPGmenu Shrink (int depth)
+    {
+
+    }
 
 
     RPGButton SelectedButton(int selectedOption)

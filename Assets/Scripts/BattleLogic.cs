@@ -10,23 +10,32 @@ public class BattleLogic : MonoBehaviour {
     public Texture buttonOff;
     public Texture buttonLocked;
 
-    public List<RPGmenu> mainMenu = new List<RPGmenu>();
+    public RPGmenu mainMenu;
 
-    RPGmenu currentMenu;
-
+    public int currentDepth = 0;
 
     void Start ()
     {
-        mainMenu.Add(new RPGmenu("Main"));
+        mainMenu = new RPGmenu("Main");
+        List<string> tempList = new List<string> { "Skills", "MetaMagic", "Magic", "Items", "Run" };
+        foreach (string temp in tempList)
+        {
+            mainMenu.AddChildButton(new RPGButton(temp, buttonOn, buttonOff, buttonLocked));
+        }
+        mainMenu.Startup();
 
-        List<string> tempList = new List<string>() {"Skills","MetaMagic","Magic","Items","Run"};
-        foreach (string tempString in tempList)
-        { 
-            mainMenu[0].AddChild(new RPGButton(tempString, buttonOn, buttonOff, buttonLocked));
+        RPGButton tempButton = mainMenu.children[0];
+        tempButton.childMenu = new RPGmenu("Skills");
+        RPGmenu tempMenu = tempButton.childMenu;
+
+        tempList = new List<string> { "Attack", "Barbarian", "Samurai", "Ninja"};
+        foreach (string temp in tempList)
+        {
+            tempMenu.AddChildButton(new RPGButton(temp, buttonOn, buttonOff, buttonLocked));
         }
 
-        currentMenu = mainMenu[0];
-        mainMenu[0].Startup();
+        tempMenu.Startup();
+
     }
 
     void Update()
@@ -38,12 +47,24 @@ public class BattleLogic : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            currentMenu.MenuUp();
+            mainMenu.MenuUp(currentDepth);
         }
 
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            currentMenu.MenuDown();
+            mainMenu.MenuDown(currentDepth);
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            currentDepth++;
+            mainMenu = mainMenu.Grow(currentDepth);
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            currentDepth--;
+            mainMenu = mainMenu.Shrink(currentDepth);
         }
     }
 }
