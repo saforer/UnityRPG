@@ -30,6 +30,23 @@ public class BattleLogic : MonoBehaviour {
         sublist.Add(new RPGButton("Items", buttonOn, buttonOff, buttonLocked));
         sublist.Add(new RPGButton("Run", buttonOn, buttonOff, buttonLocked));
 
+        sublist[0].AddChild(new RPGButton("Attack", buttonOn, buttonOff, buttonLocked));
+        sublist[0].AddChild(new RPGButton("Parry", buttonOn, buttonOff, buttonLocked));
+        sublist[0].AddChild(new RPGButton("Feint", buttonOn, buttonOff, buttonLocked));
+
+        sublist[1].AddChild(new RPGButton("Analyze", buttonOn, buttonOff, buttonLocked));
+        sublist[1].AddChild(new RPGButton("HexEdit", buttonOn, buttonOff, buttonLocked));
+
+        sublist[2].AddChild(new RPGButton("Fireball", buttonOn, buttonOff, buttonLocked));
+        sublist[2].AddChild(new RPGButton("Ice Shards", buttonOn, buttonOff, buttonLocked));
+        sublist[2].AddChild(new RPGButton("Gravity Well", buttonOn, buttonOff, buttonLocked));
+
+        sublist[3].AddChild(new RPGButton("Pancakes", buttonOn, buttonOff, buttonLocked));
+        sublist[3].AddChild(new RPGButton("Pizza", buttonOn, buttonOff, buttonLocked));
+        sublist[3].AddChild(new RPGButton("Chocolate Milk", buttonOn, buttonOff, buttonLocked));
+        sublist[3].AddChild(new RPGButton("Vodka", buttonOn, buttonOff, buttonLocked));
+
+
         totalList.Add(sublist);
 
         currentSelection = totalList[0][0];
@@ -80,7 +97,26 @@ public class BattleLogic : MonoBehaviour {
         //Depth
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
+            if (currentSelection.children.Count > 0)
+            {
+                totalList.Add(currentSelection.children);
+                pointerDepth++;
+                selectInt = 0;
 
+                currentSelection = totalList[pointerDepth][selectInt];
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            if (pointerDepth > 0)
+            {
+                totalList.RemoveAt(pointerDepth);
+                pointerDepth--;
+                selectInt = 0;
+
+                currentSelection = totalList[pointerDepth][selectInt];
+            }
         }
     }
 
