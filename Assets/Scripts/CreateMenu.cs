@@ -3,14 +3,11 @@ using System.Collections;
 
 public class CreateMenu {
 
-	RPGmenu InitiateMainMenu(RPGmenu inMenu)
+	public void InitiateMainMenu ()
     {
         RPGmenu outMenu = new RPGmenu(0);
 
-        
 
 
-
-        return outMenu;
     }
 }

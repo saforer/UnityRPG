@@ -15,27 +15,34 @@ public class BattleUI : MonoBehaviour
 
     void OnGUI()
     {
-        DrawBackground();
+        
 
-        DrawMenu(currentLogic.mainMenu);
+        DrawMenu(currentLogic.mainMenu, currentLogic.currentDepth);
         
     }
 
-    void DrawBackground()
+    void DrawMenu (RPGmenu inMenu, int inDepth)
     {
-        GUI.DrawTexture(new Rect(10, 10, 100, ((18*5)+2)), backgroundTexture);
+		RPGmenu tempMenu = inMenu;
+
+		for (int i = 0; i <= inDepth; i++)
+		{
+			DrawBackground(i);
+			int j = 0;
+			foreach (RPGButton button in tempMenu.children)
+			{
+				DrawOption(button,j,i);
+				j++;
+			}
+			tempMenu = tempMenu.OneDeeper();
+		}
+
     }
 
-    void DrawMenu (RPGmenu inMenu)
-    {
-        RPGmenu tempMenu = inMenu;
-        int vert = 0;
-        foreach (RPGButton button in tempMenu.children)
-        {
-            DrawOption(button,vert,0);
-            vert++;
-        }
-    }
+	void DrawBackground(int inDepth)
+	{
+		GUI.DrawTexture(new Rect(((100*inDepth)+10), 10, 100, ((18*5)+2)), backgroundTexture);
+	}
 
     void DrawOption(RPGButton inButton, int inVert, int inHoriz)
     {
