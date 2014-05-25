@@ -40,11 +40,15 @@ public class BattleLogic : MonoBehaviour {
 
 		PropogateMenu(currentMenu, optionsString);
 
-		optionsString = new List<string>() {"Barbarian","Ninja","Samurai","Gladiator"};
+        optionsString = new List<string>() { "Barbarian", "Ninja", "Samurai", "Gladiator" };
 
-		PropogateMenu(currentMenu.children[0],optionsString);
+        PropogateMenu(currentMenu.children[0], optionsString);
 
-		currentUI.SetSelected(currentMenu);
+        optionsString = new List<string>() { "Yell", "Smash", "Surge", "Rip" };
+
+        PropogateMenu(currentMenu.children[0].children[0], optionsString);
+
+		currentUI.SetSelected(currentMenu.children[0].children[0]);
 	}
 
 	void PropogateMenu(RPGmenu parentMenu, List<string> tempNamesList)
