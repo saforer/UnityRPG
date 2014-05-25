@@ -7,6 +7,6 @@ MonoImporter:
   - menuButtonOn: {fileID: 2800000, guid: 9c190ab43782173499a4db7a5d11de03, type: 3}
   - menuButtonOff: {fileID: 2800000, guid: 2480fb8a4444dc64f98e291e92ba485f, type: 3}
   - menuButtonLock: {fileID: 2800000, guid: 65c0a479916d42a44bd6833fe1803929, type: 3}
-  executionOrder: 0
+  executionOrder: 300
   icon: {instanceID: 0}
   userData: 

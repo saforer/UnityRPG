@@ -8,6 +8,8 @@ public class BattleUI : MonoBehaviour
 
     public Texture backgroundTexture;
 
+	public RPGmenu selectedMenuOption;
+
     void Start()
     {
         currentLogic = GetComponent<BattleLogic>();
@@ -15,41 +17,42 @@ public class BattleUI : MonoBehaviour
 
     void OnGUI()
     {
-        
-
-        DrawMenu(currentLogic.mainMenu, currentLogic.currentDepth);
-        
+		Draw ();
     }
 
-    void DrawMenu (RPGmenu inMenu, int inDepth)
-    {
-		RPGmenu tempMenu = inMenu;
+	public void SetSelected(RPGmenu inMenu)
+	{
+		selectedMenuOption = inMenu;
+	}
 
-		for (int i = 0; i <= inDepth; i++)
+	void Draw()
+	{
+		int depth = FindDepth(selectedMenuOption);
+
+		while (depth>=0)
 		{
-			DrawBackground(i);
-			int j = 0;
-			foreach (RPGButton button in tempMenu.children)
-			{
-				DrawOption(button,j,i);
-				j++;
-			}
-			tempMenu = tempMenu.OneDeeper();
+			DrawBox(selectedMenuOption, depth);
+			depth--;
 		}
+	}
 
-    }
-
-	void DrawBackground(int inDepth)
+	void DrawBox(RPGmenu inMenu, int inDepth)
 	{
 		GUI.DrawTexture(new Rect(((100*inDepth)+10), 10, 100, ((18*5)+2)), backgroundTexture);
 	}
 
-    void DrawOption(RPGButton inButton, int inVert, int inHoriz)
-    {
-        int h = (10 + (100 * inHoriz));
-        int v = (10 + (18 * inVert));
-        GUI.DrawTexture(new Rect(h, v, 100, 20), inButton.OutputTexture());
-        GUI.Label(new Rect((h + 15), v, 100, 20), inButton.label);
-    }
+	int FindDepth(RPGmenu menuInput)
+	{
+		RPGmenu tempMenu = menuInput;
+		int i = 0;
+		while (true)
+		{
+			if (tempMenu.parent == null) 
+				break;
+			tempMenu = tempMenu.parent;
+			i++;
+		}
 
+		return i;
+	}
 }
