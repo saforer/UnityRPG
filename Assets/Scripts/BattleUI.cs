@@ -60,7 +60,7 @@ public class BattleUI : MonoBehaviour
 		int VerticalLocation = 10 + (inCount * buttonHeight);
 		Rect drawWhere = new Rect(HorizontalLocation,VerticalLocation,buttonWidth,buttonHeight);
 		GUI.DrawTexture(drawWhere, inButton.UsedTexture());
-		GUI.TextArea(drawWhere,inButton.label, rpgGUIStyle);
+		GUI.Label(drawWhere,inButton.label, rpgGUIStyle);
 	}
 
 	int FindDepth(RPGmenu menuInput)
