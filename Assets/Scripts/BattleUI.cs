@@ -4,16 +4,15 @@ using System.Collections.Generic;
 
 public class BattleUI : MonoBehaviour 
 {
-    private BattleLogic currentLogic;
-
     public Texture backgroundTexture;
+	
+	public GUIStyle rpgGUIStyle;
+
+	public int buttonHeight = 24;
+	public int buttonWidth = 100;
+
 
 	public RPGmenu selectedMenuOption;
-
-    void Start()
-    {
-        currentLogic = GetComponent<BattleLogic>();
-    }
 
     void OnGUI()
     {
@@ -28,17 +27,40 @@ public class BattleUI : MonoBehaviour
 	void Draw()
 	{
 		int depth = FindDepth(selectedMenuOption);
+		RPGmenu tempSelection = selectedMenuOption;
 
 		while (depth>=0)
 		{
-			DrawBox(selectedMenuOption, depth);
+			DrawBox (tempSelection, depth, tempSelection.buttonList.Count);
+
+			int i = 0;
+			foreach (RPGButton todraw in tempSelection.buttonList)
+			{
+				DrawButton(todraw, i, depth);
+				i++;
+			}
+
+			tempSelection = tempSelection.parent;
+
 			depth--;
 		}
 	}
 
-	void DrawBox(RPGmenu inMenu, int inDepth)
+	void DrawBox(RPGmenu inMenu,int inDepth, int inCount)
 	{
-		GUI.DrawTexture(new Rect(((100*inDepth)+10), 10, 100, ((18*5)+2)), backgroundTexture);
+		int HorizontalLocation = 10+(buttonWidth*inDepth);
+		int BackgroundHeight = (buttonHeight*inCount);
+		Rect drawWhere = new Rect(HorizontalLocation,10,buttonWidth,BackgroundHeight);
+		GUI.DrawTexture(drawWhere, backgroundTexture);
+	}
+
+	void DrawButton(RPGButton inButton, int inCount,  int inDepth)
+	{
+		int HorizontalLocation = 10+(buttonWidth*inDepth);
+		int VerticalLocation = 10 + (inCount * buttonHeight);
+		Rect drawWhere = new Rect(HorizontalLocation,VerticalLocation,buttonWidth,buttonHeight);
+		GUI.DrawTexture(drawWhere, inButton.UsedTexture());
+		GUI.TextArea(drawWhere,inButton.label, rpgGUIStyle);
 	}
 
 	int FindDepth(RPGmenu menuInput)

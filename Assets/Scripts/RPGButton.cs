@@ -15,8 +15,31 @@ public class RPGButton {
 
     public RPGmenu childMenu;
 
-    public RPGButton(string inLabel, Texture inOnTexture, Texture inOffTexture, Texture inLockedTexture) 
+	public Texture buttonOff;
+	public Texture buttonOn;
+	public Texture buttonLocked;
+
+	public string label;
+
+    public RPGButton(string inLabel, RPGmenu inParent, Texture inOn, Texture inOff, Texture inLock) 
     {
-        
+		label = inLabel;
+		buttonOn = inOn;
+		buttonOff = inOff;
+		buttonLocked = inLock;
+		childMenu = new RPGmenu(inLabel, inParent);
     }
+
+	public Texture UsedTexture()
+	{
+		switch (currentState)
+		{
+		case buttonState.On:
+			return buttonOn;
+		case buttonState.Off:
+			return buttonOff;
+		default:
+			return buttonLocked;
+		}
+	}
 }
