@@ -3,44 +3,46 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Mob {
-	string name;
-	int Level;
+	public string name;
+	public int Level;
 
 	//Base Stats
-	int Strength;
-	int Agility;
-	int Constitution;
-	int Intelligence;
-	int Dexterity;
-	int Luck;
+	public int Strength;
+	public int Agility;
+	public int Constitution;
+	public int Intelligence;
+	public int Dexterity;
+	public int Luck;
 
 	//Equipment Stats
-	List<Equipment> equipped;
-	int Weapon;
-	int Mastery;
-	int Armor;
-	int MArmor;
-	int ShieldPenalty;
+	public List<Equipment> equipped;
+	public int Weapon;
+	public int Mastery;
+	public int Armor;
+	public int MArmor;
+	public int ShieldPenalty;
 
 	//Derived Stats
-	int MaxHP;
-	int MaxMP;
-	int MeleeAtk;
-	int RangeAtk;
-	int MagicAtk;
-	int ArmorDef;
-	int StatDef;
-	int ArmorMDef;
-	int StatMDef;
-	int Accuracy;
-	int NormalDodge;
-	int LuckyDodge;
-	int Crit;
-	int AtkSpeed;
-	int HPRecovery;
-	int MPRecovery;
-	int CastTime;
-	int Slots;
+	public int MaxHP;
+	public int CurrentHP;
+	public int MaxMP;
+	public int CurrentMP;
+	public int MeleeAtk;
+	public int RangeAtk;
+	public int MagicAtk;
+	public int ArmorDef;
+	public int StatDef;
+	public int ArmorMDef;
+	public int StatMDef;
+	public int Accuracy;
+	public int NormalDodge;
+	public int LuckyDodge;
+	public int Crit;
+	public int AtkSpeed;
+	public int HPRecovery;
+	public int MPRecovery;
+	public int CastTime;
+	public int Slots;
 
 
 	public Mob(string inName, int inLevel, int inStrength, int inAgility, int inConstitution, int inIntelligence, int inDexterity, int inLuck, List<Equipment> inEquip)
@@ -91,7 +93,7 @@ public class Mob {
 		StatMDef = Mathf.FloorToInt ( (Intelligence + Constitution)/5 + Dexterity/5 + Level/4 );
 		Accuracy = 175 + Level + Dexterity + Mathf.FloorToInt (Luck/3);
 		NormalDodge = 100 + Level + Agility + Mathf.FloorToInt (Luck/5);
-		LuckyDodge = Mathf.FloorToInt ((Luck * .1f) + 1) * 100;
+		LuckyDodge = Mathf.FloorToInt (((Luck * .1f) + 1));
 		Crit = Mathf.FloorToInt(Luck * .03f) * 100;
 		AtkSpeed = Mathf.FloorToInt ( (Mathf.Sqrt( Agility + (Dexterity/3) ) * 100) - ShieldPenalty );
 		HPRecovery = Mathf.Max (1,Mathf.FloorToInt( MaxHP/200 ));
@@ -105,42 +107,86 @@ public class Mob {
 			MaxMP += individualEquip.MaxMPBonus;
 		}
 
-		Debug.Log (
-			"Name: " + name + " " +
-			"Level: " + Level + " " +
-			"Strength: " + Strength + " " +
-			"Agility: " + Agility + " " +
-			"Constitution: " + Constitution + " " +
-			"Intelligence: " + Intelligence + " " +
-			"Dexterity: " + Dexterity + " " +
-			"Luck: " + Luck + " " +
-			"Weapon Damage: " + Weapon + " " +
-			"Mastery: " + Mastery + " " +
-			"Armor: " + Armor + " " +
-			"Magic Armor: " + MArmor + " " +
-			"Shield Penalty: " + ShieldPenalty + " " +
-			"MaxHP: " + MaxHP + " " + 
-			"MaxMP: " + MaxMP + " " + 
-			"MeleeATK: " + MeleeAtk + " " + 
-			"RangeATK: " + RangeAtk + " " + 
-			"MagicATK: " + MagicAtk + " " + 
-			"DEF from armor: " + ArmorDef + " " + 
-			"DEF from stat: " + StatDef + " " +
-			"MDEF from armor: " + ArmorMDef + " " +
-			"MDEF from stat: " + StatMDef + " " +
-			"Accuracy: " + Accuracy + " " +
-			"Normal Dodge: " + NormalDodge + " " +
-			"Lucky Dodge: " + LuckyDodge + " " +
-			"Crit: " + Crit + " " +
-			"Attack Speed: " + AtkSpeed + " " +
-			"HP Recov: " + HPRecovery + " " +
-			"MP Recov: " + MPRecovery + " " +
-			"Cast Time: " + CastTime + " " +
-			"Slots: " + Slots
-			);
 
-			
-
+		CurrentHP = MaxHP;
+		CurrentMP = MaxMP;
 	}
-	
+
+	public void Attack(Mob target)
+	{
+		int hitChance = Accuracy - NormalDodge;
+		int i = Random.Range (0,101);
+		if (hitChance > i)
+		{
+			int j = Random.Range (0,101);
+			if (target.LuckyDodge < j)
+			{
+				int k = Random.Range (0,101);
+				if (Crit < k)
+				{
+					//Normal Attack
+					int Damage = Mathf.FloorToInt( (float) (4000+target.ArmorDef+target.StatDef) / (float) (4000 + ((target.ArmorDef + target.StatDef)*10)) * MeleeAtk );
+					if (Damage <= 0)
+					{
+						Debug.Log ("Damage: " + Damage);
+						Damage = 1;
+					}
+
+					Debug.Log (Damage);
+				}
+				else
+				{
+					//CRIT
+
+				}
+			}
+			else
+			{
+				//LUCKY DODGE
+
+			}
+		}
+		else
+		{
+			//MISS
+
+		}
+	}
+
+	void PrintStats()
+	{
+		Debug.Log (
+		"Name: " + name + " " +
+		"Level: " + Level + " " +
+		"Strength: " + Strength + " " +
+		"Agility: " + Agility + " " +
+		"Constitution: " + Constitution + " " +
+		"Intelligence: " + Intelligence + " " +
+		"Dexterity: " + Dexterity + " " +
+		"Luck: " + Luck + " " +
+		"Weapon Damage: " + Weapon + " " +
+		"Mastery: " + Mastery + " " +
+		"Armor: " + Armor + " " +
+		"Magic Armor: " + MArmor + " " +
+		"Shield Penalty: " + ShieldPenalty + " " +
+		"MaxHP: " + MaxHP + " " + 
+		"MaxMP: " + MaxMP + " " + 
+		"MeleeATK: " + MeleeAtk + " " + 
+		"RangeATK: " + RangeAtk + " " + 
+		"MagicATK: " + MagicAtk + " " + 
+		"DEF from armor: " + ArmorDef + " " + 
+		"DEF from stat: " + StatDef + " " +
+		"MDEF from armor: " + ArmorMDef + " " +
+		"MDEF from stat: " + StatMDef + " " +
+		"Accuracy: " + Accuracy + " " +
+		"Normal Dodge: " + NormalDodge + " " +
+		"Lucky Dodge: " + LuckyDodge + " " +
+		"Crit: " + Crit + " " +
+		"Attack Speed: " + AtkSpeed + " " +
+		"HP Recov: " + HPRecovery + " " +
+		"MP Recov: " + MPRecovery + " " +
+		"Cast Time: " + CastTime + " " +
+		"Slots: " + Slots
+		);
+	}
 }

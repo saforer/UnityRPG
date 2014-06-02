@@ -11,14 +11,18 @@ public class BattleLogic : MonoBehaviour {
 	public Texture buttonOff;
 	public Texture buttonOn;
 	public Texture buttonLocked;
-
+	Mob player;
+	Mob enemy;
 
 
     void Start ()
     {
 		currentUI = gameObject.GetComponent<BattleUI>();
 
-		Mob tempMob = MobManager.GetMob(Mobs.Player);
+		player = MobManager.GetMob(Mobs.Skeleton);
+
+		enemy = MobManager.GetMob(Mobs.Player);
+
 
 		CreateMenu();
 
@@ -54,6 +58,10 @@ public class BattleLogic : MonoBehaviour {
 				currentMenu = currentMenu.parent;
 			}
 			currentUI.SetSelected(currentMenu);
+		}
+		if (Input.GetKeyDown(KeyCode.Z))
+		{
+			player.Attack(enemy);
 		}
     }
 
