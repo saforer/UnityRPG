@@ -19,9 +19,8 @@ public class BattleLogic : MonoBehaviour {
     {
 		currentUI = gameObject.GetComponent<BattleUI>();
 
-		player = MobManager.GetMob(Mobs.Skeleton);
-
-		enemy = MobManager.GetMob(Mobs.Player);
+		player = MobManager.GetMob(Mobs.Player);
+		enemy = MobManager.GetMob(Mobs.Skeleton);
 
 
 		CreateMenu();
@@ -60,9 +59,11 @@ public class BattleLogic : MonoBehaviour {
 			currentUI.SetSelected(currentMenu);
 		}
 		if (Input.GetKeyDown(KeyCode.Z))
-		{
 			player.Attack(enemy);
-		}
+		if (Input.GetKeyDown(KeyCode.A))
+			Debug.Log (player.ToString());
+		if (Input.GetKeyDown(KeyCode.S))
+			Debug.Log (enemy.ToString());
     }
 
 	void CreateMenu()

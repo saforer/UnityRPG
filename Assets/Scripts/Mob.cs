@@ -37,7 +37,7 @@ public class Mob {
 	public int Accuracy;
 	public int NormalDodge;
 	public int LuckyDodge;
-	public int Crit;
+	public int critChance;
 	public int AtkSpeed;
 	public int HPRecovery;
 	public int MPRecovery;
@@ -94,7 +94,7 @@ public class Mob {
 		Accuracy = 175 + Level + Dexterity + Mathf.FloorToInt (Luck/3);
 		NormalDodge = 100 + Level + Agility + Mathf.FloorToInt (Luck/5);
 		LuckyDodge = Mathf.FloorToInt (((Luck * .1f) + 1));
-		Crit = Mathf.FloorToInt(Luck * .03f) * 100;
+		critChance = Mathf.FloorToInt(Luck * .03f) * 100;
 		AtkSpeed = Mathf.FloorToInt ( (Mathf.Sqrt( Agility + (Dexterity/3) ) * 100) - ShieldPenalty );
 		HPRecovery = Mathf.Max (1,Mathf.FloorToInt( MaxHP/200 ));
 		MPRecovery = Mathf.Max (1,Mathf.FloorToInt( MaxMP/200 ));
@@ -114,50 +114,64 @@ public class Mob {
 
 	public void Attack(Mob target)
 	{
-		int hitChance = Accuracy - NormalDodge;
-		int i = Random.Range (0,101);
-		if (hitChance > i)
+		int hitChance = Accuracy - target.NormalDodge;
+
+		bool Dodge = isRandomInInt(hitChance);
+
+		bool LuckyDodge = isRandomInInt(target.LuckyDodge);
+
+		bool CritConfirm = isRandomInInt(critChance);
+
+		bool Hit = false;
+
+		if (CritConfirm)
+			Hit = true;
+
+		if (!Dodge && !LuckyDodge)
+			Hit = true;
+
+		if (Hit)
 		{
-			int j = Random.Range (0,101);
-			if (target.LuckyDodge < j)
-			{
-				int k = Random.Range (0,101);
-				if (Crit < k)
-				{
-					//Normal Attack
-					int Damage = Mathf.FloorToInt( (float) (4000+target.ArmorDef+target.StatDef) / (float) (4000 + ((target.ArmorDef + target.StatDef)*10)) * MeleeAtk );
-					if (Damage <= 0)
-					{
-						Debug.Log ("Damage: " + Damage);
-						Damage = 1;
-					}
-
-					Debug.Log (Damage);
-				}
-				else
-				{
-					//CRIT
-
-				}
-			}
-			else
-			{
-				//LUCKY DODGE
-
-			}
+			Debug.Log ("Hit");
+			DoDamage(CritConfirm, target);
 		}
 		else
-		{
-			//MISS
+			Debug.Log("Miss");
+	}
 
+	void DoDamage(bool ICrit, Mob target)
+	{
+		int Damage = Mathf.FloorToInt( (Random.Range(-3,3)*.1f) * MeleeAtk + MeleeAtk * ((float)(4000+target.ArmorDef+target.StatDef)/(float)( 4000+((target.ArmorDef+target.StatDef)*10) ))  );
+		float CritMultiplier = .4f;
+		if (ICrit)
+			Damage += Mathf.FloorToInt( Damage * CritMultiplier);
+
+		target.CurrentHP = target.CurrentHP - Damage;
+		if (target.CurrentHP <= 0)
+		{
+			target.CurrentHP=0;
+			Debug.Log ("DED");
 		}
 	}
 
-	void PrintStats()
+	bool isRandomInInt(int inChance)
 	{
-		Debug.Log (
+		int i = Random.Range (0,101);
+		if (inChance > i)
+			return true;
+
+		return false;
+	}
+
+	public override string ToString()
+	{
+		return 
 		"Name: " + name + " " +
 		"Level: " + Level + " " +
+		"MaxHP: " + MaxHP + " " + 
+		"CurrentHP: " + CurrentHP + " " +
+		"MaxMP: " + MaxMP + " " + 
+		"CurrentMP: " + CurrentMP + " " +
 		"Strength: " + Strength + " " +
 		"Agility: " + Agility + " " +
 		"Constitution: " + Constitution + " " +
@@ -169,8 +183,6 @@ public class Mob {
 		"Armor: " + Armor + " " +
 		"Magic Armor: " + MArmor + " " +
 		"Shield Penalty: " + ShieldPenalty + " " +
-		"MaxHP: " + MaxHP + " " + 
-		"MaxMP: " + MaxMP + " " + 
 		"MeleeATK: " + MeleeAtk + " " + 
 		"RangeATK: " + RangeAtk + " " + 
 		"MagicATK: " + MagicAtk + " " + 
@@ -181,12 +193,11 @@ public class Mob {
 		"Accuracy: " + Accuracy + " " +
 		"Normal Dodge: " + NormalDodge + " " +
 		"Lucky Dodge: " + LuckyDodge + " " +
-		"Crit: " + Crit + " " +
+		"Crit: " + critChance + " " +
 		"Attack Speed: " + AtkSpeed + " " +
 		"HP Recov: " + HPRecovery + " " +
 		"MP Recov: " + MPRecovery + " " +
 		"Cast Time: " + CastTime + " " +
-		"Slots: " + Slots
-		);
+		"Slots: " + Slots;
 	}
 }
