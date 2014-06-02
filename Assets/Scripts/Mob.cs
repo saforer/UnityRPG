@@ -3,8 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Mob {
+	BattleUI currentUI;
+
 	public string name;
 	public int Level;
+	public Texture battlePicture;
 
 	//Base Stats
 	public int Strength;
@@ -45,10 +48,12 @@ public class Mob {
 	public int Slots;
 
 
-	public Mob(string inName, int inLevel, int inStrength, int inAgility, int inConstitution, int inIntelligence, int inDexterity, int inLuck, List<Equipment> inEquip)
+	public Mob(string inName, int inLevel, int inStrength, int inAgility, int inConstitution, int inIntelligence, int inDexterity, int inLuck, List<Equipment> inEquip, Texture inPicture)
 	{
+		currentUI = GameObject.FindGameObjectWithTag("GameController").GetComponent<BattleUI>();
 		name = inName;
 		Level = inLevel;
+		battlePicture = inPicture;
 
 		//Primary Stats
 		Strength = inStrength;
@@ -116,7 +121,7 @@ public class Mob {
 	{
 		int hitChance = Accuracy - target.NormalDodge;
 
-		bool Dodge = isRandomInInt(hitChance);
+		bool Dodge = !isRandomInInt(hitChance);
 
 		bool LuckyDodge = isRandomInInt(target.LuckyDodge);
 
@@ -130,27 +135,42 @@ public class Mob {
 		if (!Dodge && !LuckyDodge)
 			Hit = true;
 
+
 		if (Hit)
 		{
-			Debug.Log ("Hit");
+			currentUI.recentDialogue = "Hit";
 			DoDamage(CritConfirm, target);
 		}
 		else
-			Debug.Log("Miss");
+		{
+		if (Dodge)
+				currentUI.recentDialogue = "Dodge";
+		
+		if (LuckyDodge)
+				currentUI.recentDialogue = "Lucky Dodge";
+		}
 	}
 
 	void DoDamage(bool ICrit, Mob target)
 	{
+		if (ICrit)
+			currentUI.recentDialogue += " Crit";
 		int Damage = Mathf.FloorToInt( (Random.Range(-3,3)*.1f) * MeleeAtk + MeleeAtk * ((float)(4000+target.ArmorDef+target.StatDef)/(float)( 4000+((target.ArmorDef+target.StatDef)*10) ))  );
 		float CritMultiplier = .4f;
 		if (ICrit)
 			Damage += Mathf.FloorToInt( Damage * CritMultiplier);
 
+		currentUI.recentDialogue += " Damage done: " + Damage;
+
 		target.CurrentHP = target.CurrentHP - Damage;
 		if (target.CurrentHP <= 0)
 		{
 			target.CurrentHP=0;
-			Debug.Log ("DED");
+			currentUI.recentDialogue += " Target is Dead";
+		}
+		else
+		{
+			currentUI.recentDialogue += " HP Left: " + target.CurrentHP;
 		}
 	}
 

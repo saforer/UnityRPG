@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public enum Mobs
 {
 	Skeleton,
+	Jelly,
 	Player
 }
 
@@ -19,24 +20,31 @@ public enum EquipLocations {
 	feet
 }
 
-public class MobManager {
+public class MobManager : MonoBehaviour {
 
 	public static Mob GetMob(Mobs wantMob)
 	{
+
 		Mob output;
-	
+		Texture tempPic;
+
 		List<Equipment> equipList = BlankEquipmentList();
 
 		switch (wantMob)
 		{
 		case Mobs.Skeleton:
-
-			output = new Mob("Skeleton",1,9,1,9,1,9,1,equipList);
+			tempPic = Resources.Load ("Jelly") as Texture;
+			output = new Mob("Skeleton",1,9,1,9,1,9,1,equipList,tempPic);
+			break;
+		case Mobs.Jelly:
+			tempPic = Resources.Load ("Jelly") as Texture;
+			output = new Mob("Jelly",1,5,5,5,5,5,1,equipList,tempPic);
 			break;
 		default:
+			tempPic = Resources.Load ("Jelly") as Texture;
 			equipList[3] = EquipmentManager.GetEquipment(Equipments.cotton_shirt);
-			equipList[4] = EquipmentManager.GetEquipment(Equipments.cutter);
-			output = new Mob("Varnull",1,5,5,5,5,5,5,equipList);
+			equipList[4] = EquipmentManager.GetEquipment(Equipments.knife);
+			output = new Mob("Varnull",1,5,5,5,5,5,5,equipList,tempPic);
 			break;
 		}
 		return output;

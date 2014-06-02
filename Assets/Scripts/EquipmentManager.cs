@@ -17,6 +17,7 @@ public enum Equipments
 {
 	cotton_shirt,
 	cutter,
+	knife,
 
 	//blank stuff
 	blankhat,
@@ -61,11 +62,16 @@ public class EquipmentManager  {
 			type = EquipTypes.weapon;
 			Attack = 30;
 			break;
-		case Equipments.blankchest:
-			type = EquipTypes.chest;
+		case Equipments.knife:
+			name = "Knife";
+			type = EquipTypes.weapon;
+			Attack = 12;
 			break;
 
 			//Blank Equipment
+		case Equipments.blankchest:
+			type = EquipTypes.chest;
+			break;
 		case Equipments.blankchin:
 			type = EquipTypes.lowerhead;
 			break;

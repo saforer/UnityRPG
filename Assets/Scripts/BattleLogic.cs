@@ -11,6 +11,7 @@ public class BattleLogic : MonoBehaviour {
 	public Texture buttonOff;
 	public Texture buttonOn;
 	public Texture buttonLocked;
+	
 	Mob player;
 	Mob enemy;
 
@@ -19,9 +20,11 @@ public class BattleLogic : MonoBehaviour {
     {
 		currentUI = gameObject.GetComponent<BattleUI>();
 
-		player = MobManager.GetMob(Mobs.Player);
-		enemy = MobManager.GetMob(Mobs.Skeleton);
 
+		player = MobManager.GetMob(Mobs.Player);
+		enemy = MobManager.GetMob(Mobs.Jelly);
+
+		currentUI.enemy = enemy;
 
 		CreateMenu();
 

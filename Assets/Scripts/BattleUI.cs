@@ -12,13 +12,30 @@ public class BattleUI : MonoBehaviour
 	public int buttonHeight = 24;
 	public int buttonWidth = 100;
 
+	public Mob enemy;
+
 	//Send selectedMenuOption from other classes to the UI, so the UI can draw it.
 	public RPGmenu selectedMenuOption;
+	public string recentDialogue;
 
     void OnGUI()
     {
 		Draw ();
+		DrawEnemy(enemy);
+		DrawDialogue();
     }
+
+	void DrawDialogue()
+	{
+		Rect location = new Rect(0,200,500,100);
+		GUI.TextField(location, recentDialogue);
+	}
+
+	void DrawEnemy(Mob inEnemy)
+	{
+		Rect location = new Rect(250,150,100,100);
+		GUI.DrawTexture(location,enemy.battlePicture);
+	}
 
 	//Call this method to update what menu is open.
 	public void SetSelected(RPGmenu inMenu)
