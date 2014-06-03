@@ -8,11 +8,13 @@ public class BattleUI : MonoBehaviour
     public Texture backgroundTexture;
 	
 	public GUIStyle rpgGUIStyle;
+
 	
 	public int buttonHeight = 24;
 	public int buttonWidth = 100;
 
-	public Mob enemy;
+	public List<Mob> playerTeam;
+	public List<Mob> enemyTeam;
 
 	//Send selectedMenuOption from other classes to the UI, so the UI can draw it.
 	public RPGmenu selectedMenuOption;
@@ -21,20 +23,34 @@ public class BattleUI : MonoBehaviour
     void OnGUI()
     {
 		Draw ();
-		DrawEnemy(enemy);
+		DrawEnemyTeam(enemyTeam);
 		DrawDialogue();
     }
 
 	void DrawDialogue()
 	{
-		Rect location = new Rect(0,200,500,100);
-		GUI.TextField(location, recentDialogue);
+		
+		int x = 0;
+		int y = 500;
+		int wid = 960;
+		int hei = 100;
+		Rect location = new Rect(x,y,wid,hei);
+		GUI.DrawTexture(location, backgroundTexture);
+		GUI.Label(location, recentDialogue);
 	}
 
-	void DrawEnemy(Mob inEnemy)
+	void DrawEnemyTeam(List<Mob> inEnemy)
+	{
+		foreach(Mob enemyUnit in inEnemy)
+		{
+			DrawEnemyUnit(enemyUnit);
+		}
+	}
+
+	void DrawEnemyUnit(Mob inEnemy)
 	{
 		Rect location = new Rect(250,150,100,100);
-		GUI.DrawTexture(location,enemy.battlePicture);
+		GUI.DrawTexture(location,inEnemy.battlePicture);
 	}
 
 	//Call this method to update what menu is open.

@@ -11,9 +11,9 @@ public class BattleLogic : MonoBehaviour {
 	public Texture buttonOff;
 	public Texture buttonOn;
 	public Texture buttonLocked;
-	
-	Mob player;
-	Mob enemy;
+
+	List<Mob> playerTeam = new List<Mob>();
+	List<Mob> enemyTeam = new List<Mob>();
 
 
     void Start ()
@@ -21,16 +21,29 @@ public class BattleLogic : MonoBehaviour {
 		currentUI = gameObject.GetComponent<BattleUI>();
 
 
-		player = MobManager.GetMob(Mobs.Player);
-		enemy = MobManager.GetMob(Mobs.Jelly);
+		FillPlayerList();
+		FillEnemyList();
 
-		currentUI.enemy = enemy;
 
 		CreateMenu();
 
 
 
     }
+
+	void FillPlayerList()
+	{
+		Mob tempPlayer = MobManager.GetMob(Mobs.Player);
+		playerTeam.Add(tempPlayer);
+		currentUI.playerTeam = playerTeam;
+	}
+
+	void FillEnemyList()
+	{
+		Mob tempEnemy = MobManager.GetMob(Mobs.Jelly);
+		enemyTeam.Add(tempEnemy);
+		currentUI.enemyTeam = enemyTeam;
+	}
 
     void Update()
     {
@@ -61,12 +74,20 @@ public class BattleLogic : MonoBehaviour {
 			}
 			currentUI.SetSelected(currentMenu);
 		}
-		if (Input.GetKeyDown(KeyCode.Z))
-			player.Attack(enemy);
 		if (Input.GetKeyDown(KeyCode.A))
-			Debug.Log (player.ToString());
+		{
+			foreach(Mob tempMob in playerTeam)
+			{
+				Debug.Log (tempMob.ToString());
+			}
+		}
 		if (Input.GetKeyDown(KeyCode.S))
-			Debug.Log (enemy.ToString());
+		{
+			foreach(Mob tempMob in enemyTeam)
+			{
+				Debug.Log (tempMob.ToString());
+			}
+		}			
     }
 
 	void CreateMenu()

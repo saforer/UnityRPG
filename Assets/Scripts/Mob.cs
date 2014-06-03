@@ -8,6 +8,7 @@ public class Mob {
 	public string name;
 	public int Level;
 	public Texture battlePicture;
+	public int row = 0;
 
 	//Base Stats
 	public int Strength;
@@ -48,12 +49,13 @@ public class Mob {
 	public int Slots;
 
 
-	public Mob(string inName, int inLevel, int inStrength, int inAgility, int inConstitution, int inIntelligence, int inDexterity, int inLuck, List<Equipment> inEquip, Texture inPicture)
+	public Mob(string inName, int inLevel, int inStrength, int inAgility, int inConstitution, int inIntelligence, int inDexterity, int inLuck, List<Equipment> inEquip, Texture inPicture, int inRow)
 	{
 		currentUI = GameObject.FindGameObjectWithTag("GameController").GetComponent<BattleUI>();
 		name = inName;
 		Level = inLevel;
 		battlePicture = inPicture;
+		row = inRow;
 
 		//Primary Stats
 		Strength = inStrength;

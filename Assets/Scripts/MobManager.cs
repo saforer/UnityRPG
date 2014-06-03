@@ -34,17 +34,17 @@ public class MobManager : MonoBehaviour {
 		{
 		case Mobs.Skeleton:
 			tempPic = Resources.Load ("Jelly") as Texture;
-			output = new Mob("Skeleton",1,9,1,9,1,9,1,equipList,tempPic);
+			output = new Mob("Skeleton",1,9,1,9,1,9,1,equipList,tempPic,0);
 			break;
 		case Mobs.Jelly:
 			tempPic = Resources.Load ("Jelly") as Texture;
-			output = new Mob("Jelly",1,5,5,5,5,5,1,equipList,tempPic);
+			output = new Mob("Jelly",1,5,5,5,5,5,1,equipList,tempPic,0);
 			break;
 		default:
 			tempPic = Resources.Load ("Jelly") as Texture;
 			equipList[3] = EquipmentManager.GetEquipment(Equipments.cotton_shirt);
 			equipList[4] = EquipmentManager.GetEquipment(Equipments.knife);
-			output = new Mob("Varnull",1,5,5,5,5,5,5,equipList,tempPic);
+			output = new Mob("Varnull",1,5,5,5,5,5,5,equipList,tempPic,0);
 			break;
 		}
 		return output;
