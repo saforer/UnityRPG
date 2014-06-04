@@ -6,25 +6,33 @@ using System.Collections.Generic;
 public class BattleUI : MonoBehaviour 
 {
     public Texture backgroundTexture;
+    public Texture reticule;
 	
 	public GUIStyle rpgGUIStyle;
-
+	public GUIStyle rpgDialogueStyle;
 	
 	public int buttonHeight = 24;
 	public int buttonWidth = 100;
 
 	public List<Mob> playerTeam;
 	public List<Mob> enemyTeam;
+	public Mob selectedMob;
 
 	//Send selectedMenuOption from other classes to the UI, so the UI can draw it.
 	public RPGmenu selectedMenuOption;
 	public string recentDialogue;
+	public bool drawMenu = true;
 
     void OnGUI()
     {
-		Draw ();
+		if (drawMenu) 
+		{
+			HowToDrawMenu ();
+			DrawDialogue ();
+		}
+
 		DrawEnemyTeam(enemyTeam);
-		DrawDialogue();
+
     }
 
 	void DrawDialogue()
@@ -36,21 +44,49 @@ public class BattleUI : MonoBehaviour
 		int hei = 100;
 		Rect location = new Rect(x,y,wid,hei);
 		GUI.DrawTexture(location, backgroundTexture);
-		GUI.Label(location, recentDialogue);
+		GUI.Label(location, recentDialogue, rpgDialogueStyle);
 	}
 
 	void DrawEnemyTeam(List<Mob> inEnemy)
 	{
+		int i = 0;
+		int j = inEnemy.Count;
 		foreach(Mob enemyUnit in inEnemy)
 		{
-			DrawEnemyUnit(enemyUnit);
+			DrawEnemyUnit(enemyUnit, i, j);
+			i++;
 		}
 	}
 
-	void DrawEnemyUnit(Mob inEnemy)
+	void DrawEnemyUnit(Mob inEnemy, int i, int j)
 	{
-		Rect location = new Rect(250,150,100,100);
+		int wid = 100;
+		int hei = 100;
+
+		int x = 480;
+		int y = 300;
+
+		int spacing = 150;
+
+		x += spacing * i;
+
+		x -= (spacing * j)/2;
+
+
+
+		Rect location = new Rect(x,y,wid,hei);
 		GUI.DrawTexture(location,inEnemy.battlePicture);
+
+        if (selectedMob == inEnemy)
+        {
+            DrawTargettingReticule(wid, hei, x, y);
+        }
+	}
+
+	void DrawTargettingReticule(int inWid, int inHei, int inX, int inY)
+	{
+        Rect location = new Rect(inX-10, inY-10, inWid+20, inHei+20);
+        GUI.DrawTexture(location, reticule);
 	}
 
 	//Call this method to update what menu is open.
@@ -59,7 +95,7 @@ public class BattleUI : MonoBehaviour
 		selectedMenuOption = inMenu;
 	}
 
-	void Draw()
+	void HowToDrawMenu()
 	{
 
 		//Find how deep in the tree we are
