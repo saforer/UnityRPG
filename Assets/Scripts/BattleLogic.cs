@@ -33,17 +33,21 @@ public class BattleLogic : MonoBehaviour {
 	List<Mob> playerTeam = new List<Mob>();
 	List<Mob> enemyTeam = new List<Mob>();
 
-    public int selectedMobInt = 0;
+    public int selectedMobInt;
 	public Mob selectedMob;
 	public Mob selectedPlayer;
 
 	public rpgBattleState currentBattleState = rpgBattleState.playerTurn;
 	public playerTurnStates currentPlayerState = playerTurnStates.selectingMove;
 
+    List<int> targetList;
+
     void Start ()
     {
 		currentUI = gameObject.GetComponent<BattleUI>();
 
+        selectedMobInt = -1;
+        UpdateSelectedMob(selectedMobInt);
 
 		FillPlayerList();
 		FillEnemyList();
@@ -87,22 +91,27 @@ public class BattleLogic : MonoBehaviour {
 		switch (currentPlayerState)
 		{
             case playerTurnStates.steppingToMove:
-            SetupMenuControls();
-            break;
+                SetupMenuControls();
+                break;
 		    case playerTurnStates.selectingMove:
-			MenuControls();
-			break;
+			    MenuControls();
+			    break;
             case playerTurnStates.steppingToTarget:
-            SetupTargetControls();
-            break;
+                SetupTargetControls();
+                break;
             case playerTurnStates.targetting:
-            TargetControls();
-            break;
+                TargetControls();
+                break;
+            case playerTurnStates.isTurnOver:
+                IsTurnOverCheck();
+                break;
 		}
     }
 
     void SetupMenuControls()
     {
+        currentUI.drawMenu = true;
+        CreateMenu();
         currentPlayerState = playerTurnStates.selectingMove;
     }
 
@@ -115,20 +124,6 @@ public class BattleLogic : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             currentMenu.MoveUp();
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            currentMenu = currentMenu.ChildSelected();
-            currentMenu.UpdateSelection();
-            currentUI.SetSelected(currentMenu);
-        }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            if (currentMenu.parent != null)
-            {
-                currentMenu = currentMenu.parent;
-            }
-            currentUI.SetSelected(currentMenu);
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
@@ -146,14 +141,34 @@ public class BattleLogic : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            currentPlayerState = playerTurnStates.steppingToTarget;
+            if (currentMenu.DoesChildExist())
+            {
+                currentMenu = currentMenu.ChildSelected();
+                currentMenu.UpdateSelection();
+                currentUI.SetSelected(currentMenu);
+            }
+            else
+            {
+
+                currentPlayerState = playerTurnStates.steppingToTarget;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            if (currentMenu.parent != null)
+            {
+                currentMenu = currentMenu.parent;
+            }
+            currentUI.SetSelected(currentMenu);
         }
     }
 
     void SetupTargetControls()
     {
+        currentUI.drawMenu = false;
         selectedMobInt = 0;
         UpdateSelectedMob(selectedMobInt);
+        targetList = new List<int>();
         currentPlayerState = playerTurnStates.targetting;
     }
 
@@ -184,12 +199,42 @@ public class BattleLogic : MonoBehaviour {
             }
             UpdateSelectedMob(selectedMobInt);
         }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            int MoveTargets = 2;
+            if (targetList.Contains(selectedMobInt))
+            {
+                targetList.Remove(selectedMobInt);
+            }
+            else
+            {
+                targetList.Add(selectedMobInt);
+            }
+            UpdateTargetingList();
+            if (targetList.Count == MoveTargets)
+            {
+                currentPlayerState = playerTurnStates.isTurnOver;
+            }
+        }
+    }
+
+    void IsTurnOverCheck()
+    {
+        targetList.Clear();
+        selectedMobInt = -1;
+        UpdateSelectedMob(selectedMobInt);
+        currentPlayerState = playerTurnStates.steppingToMove;
+    }
+
+    void UpdateTargetingList()
+    {
+        currentUI.targetList = targetList;
     }
 
     void UpdateSelectedMob(int inInt)
     {
-        selectedMob = enemyTeam[inInt];
-        currentUI.selectedMob = selectedMob;
+        currentUI.selectedMobInt = selectedMobInt;
     }
 
 	void CreateMenu()

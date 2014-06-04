@@ -7,6 +7,7 @@ public class BattleUI : MonoBehaviour
 {
     public Texture backgroundTexture;
     public Texture reticule;
+    public Texture reticule2;
 	
 	public GUIStyle rpgGUIStyle;
 	public GUIStyle rpgDialogueStyle;
@@ -16,7 +17,9 @@ public class BattleUI : MonoBehaviour
 
 	public List<Mob> playerTeam;
 	public List<Mob> enemyTeam;
-	public Mob selectedMob;
+    public List<int> targetList;
+    public int selectedMobInt = -1;
+
 
 	//Send selectedMenuOption from other classes to the UI, so the UI can draw it.
 	public RPGmenu selectedMenuOption;
@@ -77,17 +80,28 @@ public class BattleUI : MonoBehaviour
 		Rect location = new Rect(x,y,wid,hei);
 		GUI.DrawTexture(location,inEnemy.battlePicture);
 
-        if (selectedMob == inEnemy)
+        if (selectedMobInt == i)
         {
-            DrawTargettingReticule(wid, hei, x, y);
+            DrawReticule(wid, hei, x, y);
+        }
+
+        if (targetList.Contains(i))
+        {
+            DrawTargets(wid, hei, x, y);
         }
 	}
 
-	void DrawTargettingReticule(int inWid, int inHei, int inX, int inY)
+	void DrawTargets(int inWid, int inHei, int inX, int inY)
 	{
         Rect location = new Rect(inX-10, inY-10, inWid+20, inHei+20);
         GUI.DrawTexture(location, reticule);
 	}
+
+    void DrawReticule(int inWid, int inHei, int inX, int inY)
+    {
+        Rect location = new Rect(inX - 10, inY - 10, inWid + 20, inHei + 20);
+        GUI.DrawTexture(location, reticule2);
+    }
 
 	//Call this method to update what menu is open.
 	public void SetSelected(RPGmenu inMenu)

@@ -66,6 +66,14 @@ public class RPGmenu
 		return buttonList[i].childMenu; 
 	}
 
+    public bool DoesChildExist()
+    {
+        if (buttonList[selectionNumber].childMenu.buttonList.Count > 0)
+            return true;
+
+        return false;
+    }
+
 	//This is for the "go further in the tree script"
 	//If further in the tree exists, return it. If not, return the one we KNOW works.
 	public RPGmenu ChildSelected()
