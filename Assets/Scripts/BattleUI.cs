@@ -19,6 +19,7 @@ public class BattleUI : MonoBehaviour
 	public List<Mob> enemyTeam;
     public List<int> targetList;
     public int selectedMobInt = -1;
+    public int selectedPlayerInt = -1;
 
 
 	//Send selectedMenuOption from other classes to the UI, so the UI can draw it.
@@ -35,7 +36,18 @@ public class BattleUI : MonoBehaviour
 		}
 
 		DrawEnemyTeam(enemyTeam);
+        DrawPlayerTeam(playerTeam);
 
+        DrawRestartButton();
+
+    }
+
+    void DrawRestartButton()
+    {
+        Rect location = new Rect (960-75,150,75,35);
+
+        if (GUI.Button(location, "Restart"))
+            Application.LoadLevel(Application.loadedLevelName);
     }
 
 	void DrawDialogue()
@@ -49,6 +61,39 @@ public class BattleUI : MonoBehaviour
 		GUI.DrawTexture(location, backgroundTexture);
 		GUI.Label(location, recentDialogue, rpgDialogueStyle);
 	}
+
+    void DrawPlayerTeam(List<Mob> inPlayer)
+    {
+        int i = 0;
+        int j = inPlayer.Count;
+        foreach (Mob playerUnit in inPlayer)
+        {
+            DrawPlayerUnit(playerUnit, i, j);
+            i++;
+        }
+    }
+    
+    void DrawPlayerUnit(Mob playerUnit, int i, int j)
+    {
+		int wid = 50;
+        int hei = 50;
+
+		int x = 480;
+		int y = 450;
+
+        y -= 50 * playerUnit.row;
+
+		int spacing = 50;
+
+		x += spacing * i;
+
+		x -= (spacing * j)/2;
+
+
+
+		Rect location = new Rect(x,y,wid,hei);
+		GUI.DrawTexture(location,playerUnit.battlePicture);
+    }
 
 	void DrawEnemyTeam(List<Mob> inEnemy)
 	{
@@ -67,9 +112,9 @@ public class BattleUI : MonoBehaviour
 		int hei = 100;
 
 		int x = 480;
-		int y = 300;
+		int y = 200;
 
-		int spacing = 150;
+		int spacing = 100;
 
 		x += spacing * i;
 
@@ -93,7 +138,7 @@ public class BattleUI : MonoBehaviour
 
 	void DrawTargets(int inWid, int inHei, int inX, int inY)
 	{
-        Rect location = new Rect(inX-10, inY-10, inWid+20, inHei+20);
+        Rect location = new Rect(inX-5, inY-5, inWid+10, inHei+10);
         GUI.DrawTexture(location, reticule);
 	}
 

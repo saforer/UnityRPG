@@ -35,6 +35,7 @@ public class BattleLogic : MonoBehaviour {
 
     public int selectedMobInt;
 	public Mob selectedMob;
+    public int selectedPlayerInt;
 	public Mob selectedPlayer;
 
 	public rpgBattleState currentBattleState = rpgBattleState.playerTurn;
@@ -46,29 +47,35 @@ public class BattleLogic : MonoBehaviour {
     {
 		currentUI = gameObject.GetComponent<BattleUI>();
 
+        selectedPlayerInt = 0;
+        UpdateSelectedPlayer(selectedPlayerInt);
         selectedMobInt = -1;
         UpdateSelectedMob(selectedMobInt);
 
 		FillPlayerList();
 		FillEnemyList();
 
-
 		CreateMenu();
-
-
-
     }
 
 	void FillPlayerList()
 	{
-		Mob tempPlayer = MobManager.GetMob(Mobs.Player);
-		playerTeam.Add(tempPlayer);
+        for (int i = 0; i < 10; i++)
+        {
+            Mob tempPlayer = MobManager.GetMob(Mobs.Player);
+            if (i % 2 == 0)
+                tempPlayer.row = 1;
+            if (i % 3 == 0)
+                tempPlayer.row = 2;
+            playerTeam.Add(tempPlayer);
+        }
+
 		currentUI.playerTeam = playerTeam;
 	}
 
 	void FillEnemyList()
 	{
-		for (int i = 0; i<5; i++) 
+		for (int i = 0; i < 9; i++) 
 		{
 			Mob tempEnemy = MobManager.GetMob (Mobs.Jelly);
 			enemyTeam.Add (tempEnemy);
@@ -230,6 +237,11 @@ public class BattleLogic : MonoBehaviour {
     void UpdateTargetingList()
     {
         currentUI.targetList = targetList;
+    }
+
+    void UpdateSelectedPlayer(int inInt)
+    {
+        currentUI.selectedPlayerInt = selectedPlayerInt;
     }
 
     void UpdateSelectedMob(int inInt)
