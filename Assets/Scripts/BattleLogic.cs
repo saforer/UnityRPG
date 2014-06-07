@@ -18,6 +18,7 @@ public enum FightState
 
 public class BattleLogic : MonoBehaviour {
     BattleUI currentUI;
+    Controls currentButtons;
 
     FightState currentFightState = FightState.InitializingEverything;
 
@@ -40,7 +41,7 @@ public class BattleLogic : MonoBehaviour {
                 PlayerMenuSetup();
                 break;
             case FightState.PlayerMenu:
-
+                PlayerMenuLoop();
                 break;
         }
 	}
@@ -49,6 +50,8 @@ public class BattleLogic : MonoBehaviour {
     {
         //Find UI
         currentUI = gameObject.GetComponent<BattleUI>();
+        //Find Controls
+        currentButtons = gameObject.GetComponent<Controls>();
         //Get Players
         playerTeam = GetTeam(Team.Player);
         //Get Enemies
@@ -100,9 +103,49 @@ public class BattleLogic : MonoBehaviour {
     void PlayerMenuSetup()
     {
         currentPlayerMenu = currentPlayer.CreateRoot();
-        currentPlayerMenu = currentPlayerMenu.childrenButtons[0].childMenu.childrenButtons[0].childMenu;
         currentUI.uiCurrentPlayerMenu = currentPlayerMenu;
         currentUI.PlayerMenuDrawing = true;
         currentFightState = FightState.PlayerMenu;
+    }
+
+    void PlayerMenuLoop()
+    {
+        if (currentButtons.UpArrow)
+        {
+            currentPlayerMenu.MoveUp();
+            currentUI.uiCurrentPlayerMenu = currentPlayerMenu;
+        }
+        if (currentButtons.DownArrow)
+        {
+            currentPlayerMenu.MoveDown();
+            currentUI.uiCurrentPlayerMenu = currentPlayerMenu;
+        }
+        if (currentButtons.Z)
+        {
+            if (currentPlayerMenu.CanGoRight())
+            {
+                currentPlayerMenu = currentPlayerMenu.MoveRight();
+                currentPlayerMenu.UpdateSelected();
+                currentUI.uiCurrentPlayerMenu = currentPlayerMenu;
+            }
+            else if (currentPlayerMenu.CanDoMove())
+            {
+                DoMove(currentPlayerMenu.CurrentButtonMove());
+            }
+        }
+        if (currentButtons.X && currentPlayerMenu.CanLeft())
+        {
+            currentPlayerMenu = currentPlayerMenu.MoveLeft();
+            currentUI.uiCurrentPlayerMenu = currentPlayerMenu;
+        }
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Debug.Log(currentPlayerMenu.ToString());
+        }
+    }
+
+    void DoMove(Move inMove)
+    {
+        Debug.Log("I DON'T KNOW HOW TO DO " + inMove.name);
     }
 }

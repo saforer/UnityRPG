@@ -18,9 +18,9 @@ public class MenuButton  {
 
 
     public string name;
-    Texture offTexture;
-    Texture onTexture;
-    Texture lockTexture;
+    public Texture offTexture;
+    public Texture onTexture;
+    public Texture lockTexture;
 
     public MenuButton(string inLabel)
     {

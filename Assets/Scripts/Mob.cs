@@ -38,18 +38,17 @@ public class Mob
      
         rootMenu.childrenButtons.Add(new MenuButton("MetaMagic"));
         rootMenu.childrenButtons[1].childMenu = new MenuListing("MetaMagic Menu", rootMenu);
-        tempMenu = rootMenu.childrenButtons[1].childMenu;
         
         rootMenu.childrenButtons.Add(new MenuButton("Magic"));
         rootMenu.childrenButtons[2].childMenu = new MenuListing("Magic Menu", rootMenu);
-        tempMenu = rootMenu.childrenButtons[2].childMenu;
         
         rootMenu.childrenButtons.Add(new MenuButton("Items"));
         rootMenu.childrenButtons[3].childMenu = new MenuListing("Items Menu", rootMenu);
-        tempMenu = rootMenu.childrenButtons[3].childMenu;
         
         rootMenu.childrenButtons.Add(new MenuButton("Run"));
-        tempMenu = rootMenu.childrenButtons[4].childMenu;
+        rootMenu.childrenButtons[4].childMove = new Move("Run");
+
+        rootMenu.UpdateSelected();
 
         return rootMenu;
     }
