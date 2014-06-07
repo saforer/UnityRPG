@@ -17,6 +17,8 @@ public class BattleUI : MonoBehaviour
     public Mob uiCurrentEnemy;
     public MenuListing uiCurrentPlayerMenu;
 
+    
+
     public bool PlayerMenuDrawing = false;
 
 
@@ -44,8 +46,22 @@ public class BattleUI : MonoBehaviour
     {
 
         int depth = FindDepth(inRootMenu);
-        Debug.Log("Depth: " + depth);
+        MenuListing tempSelection = inRootMenu;
         
+        while (depth>=0)
+        {
+            DrawMenuBackground(tempSelection.childrenButtons.Count, depth);
+            int i = 0;
+            foreach (MenuButton button in tempSelection.childrenButtons)
+            {
+                DrawMenuButton(button, i, depth);
+                i++;
+            }
+
+            tempSelection = tempSelection.parent;
+
+            depth--;
+        }
     }
 
 
@@ -62,5 +78,36 @@ public class BattleUI : MonoBehaviour
         }
 
         return i;
+    }
+
+    void DrawMenuBackground(int inCount, int inDepth)
+    {
+        //Find out where the menu should be drawn, and how big it should be
+        int HorizontalLocation = 10 + (100 * inDepth);
+        int BackgroundHeight = (50 * inCount);
+
+        //Scope out how big the box should be
+        Rect drawWhere = new Rect(HorizontalLocation, 10, 100, BackgroundHeight);
+
+        Texture backgroundTexture = Resources.Load("MenuBox") as Texture;
+
+        //Actually draw the background
+        GUI.DrawTexture(drawWhere, backgroundTexture);
+    }
+
+    void DrawMenuButton(MenuButton inButton, int buttonNumber, int buttonDepth)
+    {
+        //Find out where the button should be drawn
+        int HorizontalLocation = 10 + (100 * buttonDepth);
+        int VerticalLocation = 10 + (buttonNumber * 50);
+
+        //Scope out how big the button needs to be
+        Rect drawWhere = new Rect(HorizontalLocation, VerticalLocation, 100, 50);
+
+        //Actually draw the background of the button
+        GUI.DrawTexture(drawWhere, inButton.CurrentTexture());
+
+        //Give the button its text, the guistyle just has centered alignment
+        GUI.Label(drawWhere, inButton.name);
     }
 }

@@ -100,6 +100,7 @@ public class BattleLogic : MonoBehaviour {
     void PlayerMenuSetup()
     {
         currentPlayerMenu = currentPlayer.CreateRoot();
+        currentPlayerMenu = currentPlayerMenu.childrenButtons[0].childMenu.childrenButtons[0].childMenu;
         currentUI.uiCurrentPlayerMenu = currentPlayerMenu;
         currentUI.PlayerMenuDrawing = true;
         currentFightState = FightState.PlayerMenu;

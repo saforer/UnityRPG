@@ -3,10 +3,10 @@ using System.Collections;
 
 public class Move {
 
-    public string name = "Suplex";
+    public string name;
 
-    public Move()
+    public Move(string inName)
     {
-
+        name = inName;
     }
 }
