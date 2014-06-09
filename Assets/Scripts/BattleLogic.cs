@@ -26,7 +26,13 @@ public class BattleLogic : MonoBehaviour {
     List<Mob> enemyTeam;
     List<Mob> turnOrder;
     Mob currentPlayer;
+    Mob currentEnemy;
     MenuListing currentPlayerMenu;
+
+    MobManager mobManager = new MobManager();
+    JobManager jobManager = new JobManager();
+    MoveManager moveManager = new MoveManager();
+    ItemManager itemManager = new ItemManager();
 
 	void Update () {
 	    switch (currentFightState)
@@ -43,6 +49,9 @@ public class BattleLogic : MonoBehaviour {
             case FightState.PlayerMenu:
                 PlayerMenuLoop();
                 break;
+            case FightState.SettingUpTargettingWindow:
+                SettingUpTarget();
+                break;
         }
 	}
 
@@ -56,8 +65,13 @@ public class BattleLogic : MonoBehaviour {
         playerTeam = GetTeam(Team.Player);
         //Get Enemies
         enemyTeam = GetTeam(Team.Enemy);
+
+        //Make sure enemies don't have empty rows
+
         //Send players&enemies to UI
         UpdateUI();
+
+
 
         currentFightState = FightState.FindingPlayerOrder;
     }
@@ -70,18 +84,88 @@ public class BattleLogic : MonoBehaviour {
             case Team.Player:
                 for (int i = 0; i < 10; i++)
                 {
-                    Mob tempMob = new Mob("Dude" + i);
+                    Mob tempMob = mobManager.GetMob(ValidMob.player);
                     outputList.Add(tempMob);
                 }
                 break;
             case Team.Enemy:
                 for (int i = 0; i < 10; i++)
                 {
-                    Mob tempMob = new Mob("Badguy" + i);
+                    Mob tempMob = mobManager.GetMob(ValidMob.jelly);
                     outputList.Add(tempMob);
                 }
                 break;
         }
+
+        outputList = FixRows(outputList);
+
+        return outputList;
+    }
+
+    List<Mob> FixRows(List<Mob> inputList)
+    {
+        List<Mob> outputList = inputList;        
+        bool frontEmpty;        
+        List<Mob> frontRow;        
+        bool middleEmpty;        
+        List<Mob> middleRow;        
+        bool backEmpty;        
+        List<Mob> backRow;
+        bool redo = true;
+
+        while (redo)
+        {
+
+            frontEmpty = false;
+            frontRow = new List<Mob>();
+            middleEmpty = false;
+            middleRow = new List<Mob>();
+            backEmpty = false;
+            backRow = new List<Mob>();
+
+            foreach (Mob mob in outputList)
+            {
+                if (mob.row == Rows.Front) frontRow.Add(mob);
+                if (mob.row == Rows.Middle) middleRow.Add(mob);
+                if (mob.row == Rows.Back) backRow.Add(mob);
+            }
+
+
+            if (frontRow.Count == 0) frontEmpty = true;
+            if (middleRow.Count == 0) middleEmpty = true;
+            if (backRow.Count == 0) backEmpty = true;
+
+            if (!frontEmpty)
+            {
+                if (!middleEmpty)
+                    redo = false;
+            }
+
+            if (frontEmpty)
+            {
+                if (middleEmpty)
+                {
+                    foreach (Mob mob in backRow) mob.row = Rows.Front;
+                }
+                else
+                {
+                    foreach (Mob mob in middleRow) mob.row = Rows.Front;
+                }
+            }
+
+            if (middleEmpty)
+            {
+                if (backEmpty)
+                {
+                    redo = false;
+                }
+                else
+                {
+                    foreach (Mob mob in backRow) mob.row = Rows.Middle;
+                }
+            }
+        }
+
         return outputList;
     }
 
@@ -89,6 +173,7 @@ public class BattleLogic : MonoBehaviour {
     {
         currentUI.uiPlayers = playerTeam;
         currentUI.uiCurrentPlayer = currentPlayer;
+        currentUI.uiCurrentEnemy = currentEnemy;
         currentUI.uiEnemies = enemyTeam;
     }
 
@@ -132,6 +217,10 @@ public class BattleLogic : MonoBehaviour {
             {
                 DoMove(currentPlayerMenu.CurrentButtonMove());
             }
+            else if (currentPlayerMenu.CanUseItem())
+            {
+                UseItem(currentPlayerMenu.CurrentButtonItem());
+            }
         }
         if (currentButtons.X && currentPlayerMenu.CanLeft())
         {
@@ -140,12 +229,34 @@ public class BattleLogic : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
-            Debug.Log(currentPlayerMenu.ToString());
+            Debug.Log("------------PlayerTeam----------");
+            foreach (Mob mob in playerTeam)
+            {
+                Debug.Log(mob.row);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Debug.Log("------------EnemyTeam----------");
+            foreach (Mob mob in enemyTeam)
+            {
+                Debug.Log(mob.row);
+            }
         }
     }
 
     void DoMove(Move inMove)
     {
-        Debug.Log("I DON'T KNOW HOW TO DO " + inMove.name);
+        currentUI.SetTextBox("I don't know how to do " + inMove.name);
+    }
+
+    void UseItem(Item inItem)
+    {
+        currentUI.SetTextBox("I don't know how to use " + inItem.name);
+    }
+
+    void SettingUpTarget()
+    {
+
     }
 }

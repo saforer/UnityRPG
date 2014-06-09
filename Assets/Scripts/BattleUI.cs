@@ -17,7 +17,8 @@ public class BattleUI : MonoBehaviour
     public Mob uiCurrentEnemy;
     public MenuListing uiCurrentPlayerMenu;
 
-    
+    [HideInInspector]
+    string uiString = "Can't actually DO moves yet, but try to select them anyway. Z X Up and Down are controls";
 
     public bool PlayerMenuDrawing = false;
 
@@ -30,16 +31,139 @@ public class BattleUI : MonoBehaviour
     void WhatToDraw()
     {
         //Draw Allies
+        DrawTeamPlayer(uiPlayers);
         //Draw Enemies
+        DrawTeamEnemy(uiEnemies);
 
         if (PlayerMenuDrawing)
         {
             //Draw Player Menu
             DrawPlayerMenu(uiCurrentPlayerMenu);
         }
-        //Draw Dialogue Box        
+        //Draw Dialogue Box
+        DrawTextBox(uiString);
         //Draw Targetting Reticule
         //Draw Targetted Enemies
+    }
+
+    void DrawTeamPlayer(List<Mob> inPlayers)
+    {
+        int i = 0;
+        int j = inPlayers.Count;
+        foreach (Mob mob in inPlayers)
+        {
+            DrawPlayerUnit(mob, i, j);
+            i++;
+        }
+    }
+
+    void DrawPlayerUnit(Mob inMob, int i, int j)
+    {
+        int wid = 50;
+        int hei = 50;
+        int x = 480;
+        int y = 430;
+        int spacing = 50;
+
+        int rowInt;
+        switch (inMob.row)
+        {
+            case Rows.Front:
+                rowInt = 0;
+                break;
+            case Rows.Middle:
+                rowInt = 1;
+                break;
+            default:
+                rowInt = 2;
+                break;
+        }
+
+        x += spacing * i;
+
+        x -= (spacing * j) / 2;
+
+        y += rowInt * 50;
+
+        Rect Location = new Rect(x, y, wid, hei);
+
+        if (inMob == uiCurrentPlayer)
+        {
+            DrawSelectionBox(Location);
+        }
+
+        GUI.DrawTexture(Location, Resources.Load("Thief/Player") as Texture);
+        
+
+    }
+
+    void DrawSelectionBox(Rect inLocation)
+    {
+        Rect outLocation = inLocation;
+        const int grow = 10;
+        outLocation.width  += grow;
+        outLocation.height += grow;
+        outLocation.x -= grow / 2;
+        outLocation.y -= grow / 2;
+        Texture reticule = Resources.Load("MenuButtonOff") as Texture;
+        GUI.DrawTexture(outLocation, reticule);
+    }
+
+    void DrawTeamEnemy(List<Mob> inEnemy)
+    {   
+        int i = 0;
+        int j = inEnemy.Count;
+
+        foreach (Mob mob in inEnemy)
+        {
+            DrawEnemyUnit(mob, i, j);
+            i++;
+        }
+
+        
+    }
+
+    void DrawEnemyUnit(Mob inMob, int i, int j)
+    {
+        int wid = 75;
+        int hei = wid;
+        int x = 480;
+        int y = 150;
+
+        int spacing = wid;
+
+        
+
+        x += spacing * i;
+
+        x -= (spacing * j) / 2;
+
+        int rowInt;
+        switch (inMob.row)
+        {
+            case Rows.Front:
+                rowInt = 0;
+                break;
+            case Rows.Middle:
+                rowInt = 1;
+                break;
+            default:
+                rowInt = 2;
+                break;
+        }
+
+        y -= rowInt * 50;
+        y += rowInt * 20;
+        wid -= rowInt * 10;
+        hei = wid;
+
+
+
+        Rect Location = new Rect(x, y, wid, hei);
+        if (inMob == uiCurrentEnemy)
+            DrawSelectionBox(Location);
+
+        GUI.DrawTexture(Location, inMob.battlePicture);
     }
 
     void DrawPlayerMenu(MenuListing inRootMenu)
@@ -109,5 +233,15 @@ public class BattleUI : MonoBehaviour
 
         //Give the button its text, the guistyle just has centered alignment
         GUI.Label(drawWhere, inButton.name);
+    }
+
+    void DrawTextBox(string inString)
+    {
+        GUI.Label(new Rect(450 - 150, 300 - 25, 300, 50), inString);
+    }
+
+    public void SetTextBox(string inString)
+    {
+        uiString = inString;
     }
 }

@@ -13,6 +13,7 @@ public class MenuButton  {
 
     public MenuListing childMenu;
     public Move childMove;
+    public Item childItem;
 
     public ButtonStates currentState = ButtonStates.Off;
 

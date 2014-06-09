@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: dd463e261f1e08a4ca2e4d6315c19db7
+guid: fef94fc261f31f7438c07e3b7c9c50c3
 TextureImporter:
   serializedVersion: 2
   mipmaps:
@@ -21,16 +21,16 @@ TextureImporter:
   generateCubemap: 0
   seamlessCubemap: 0
   textureFormat: -3
-  maxTextureSize: 512
+  maxTextureSize: 1024
   textureSettings:
     filterMode: 0
-    aniso: -1
+    aniso: 1
     mipBias: -1
-    wrapMode: -1
+    wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -44,6 +44,15 @@ TextureImporter:
     textureFormat: -2
     compressionQuality: 50
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: Player
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 702
+        width: 35
+        height: 92
+      alignment: 0
+      pivot: {x: .5, y: .5}
   spritePackingTag: 
   userData: 

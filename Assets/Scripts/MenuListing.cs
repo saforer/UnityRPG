@@ -71,6 +71,12 @@ public class MenuListing {
         return false;
     }
 
+    public bool CanUseItem()
+    {
+        if (childrenButtons[currentSelection].childItem != null) return true;
+        return false;
+    }
+
     public MenuListing MoveRight()
     {
         return childrenButtons[currentSelection].childMenu;
@@ -80,7 +86,12 @@ public class MenuListing {
     {
         return childrenButtons[currentSelection].childMove;
     }
- 
+
+    public Item CurrentButtonItem()
+    {
+        return childrenButtons[currentSelection].childItem;
+    }
+
     public void UpdateSelected()
     {
         foreach (MenuButton button in childrenButtons)
@@ -90,7 +101,7 @@ public class MenuListing {
         childrenButtons[currentSelection].currentState = ButtonStates.On;
     }
 
-    public string ToString()
+     public override string ToString()
     {
         string output;
         output = "[Name: " + " " + name + "] ";
