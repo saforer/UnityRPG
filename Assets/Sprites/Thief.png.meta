@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c3d1c1f36f1141742ad0d37c4d7151d9
+guid: fef94fc261f31f7438c07e3b7c9c50c3
 TextureImporter:
   serializedVersion: 2
   mipmaps:
@@ -35,7 +35,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: .5, y: .5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 50
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings:
@@ -45,13 +45,13 @@ TextureImporter:
     compressionQuality: 50
   spriteSheet:
     sprites:
-    - name: Jelly
+    - name: Player
       rect:
         serializedVersion: 2
-        x: 55
-        y: 710
-        width: 39
-        height: 30
+        x: 10
+        y: 702
+        width: 35
+        height: 92
       alignment: 0
       pivot: {x: .5, y: .5}
   spritePackingTag: 

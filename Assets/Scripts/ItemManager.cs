@@ -1,24 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public enum ValidItems
+public enum ValidItem
 {
-    //Solid
     Pancakes,
-    Waffles,
-
-    //Liquid
-    Vodka,
-    Milk,
-
-    //Mix
-    Yogurt_Smoothie,
-    Covered_Brick
+    Yogurt_Smoothie
 }
 
 public class ItemManager {
-    public Item GetItem(ValidItems inItem)
-    {
-        return new Item(inItem.ToString());
-    }
+
+	
 }

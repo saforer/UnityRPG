@@ -4,72 +4,41 @@ using System.Collections.Generic;
 
 public enum ValidMob
 {
-    jelly,
-    skeleton,
-    player
+    Player,
+    Jelly,
+    Skeleton
 }
 
 public class MobManager {
+    SpriteBox currentBox;
 
-    JobManager jobManager = new JobManager();
 
-    public Mob GetMob(ValidMob inMob)
+    public Sprite GetPicture(ValidMob inMob)
     {
-        Mob tempMob;
-        List<ValidMoves> tempMovesLearned;
-        List<ValidMoves> tempMetaList;
-        List<ValidItems> tempItemsList;
-        ValidJobs tempJob;
-
+        currentBox = GameObject.FindGameObjectWithTag("GameController").GetComponent<SpriteBox>();
         switch (inMob)
         {
-            case ValidMob.jelly:
-            default: //JELLY
-                tempItemsList = new List<ValidItems>() { ValidItems.Pancakes, ValidItems.Milk };
-                tempMetaList = new List<ValidMoves>() { ValidMoves.Self_Perfection, ValidMoves.Validate };
-
-                tempMob = new Mob("Jelly", tempItemsList, tempMetaList, ValidSprites.Jelly);
-
-                tempJob = ValidJobs.Ninja;
-                tempMovesLearned = new List<ValidMoves>() { ValidMoves.Akujiki };
-                tempMob.playerJobs.Add(AddJob(tempJob, tempMovesLearned));
-                break;
-
-            case ValidMob.player:
-                tempItemsList = new List<ValidItems>() { ValidItems.Milk, ValidItems.Milk };
-                tempMetaList = new List<ValidMoves>() { ValidMoves.Self_Perfection, ValidMoves.Validate };
-
-                tempMob = new Mob("Player", tempItemsList, tempMetaList, ValidSprites.Player);
-
-                tempJob = ValidJobs.Barbarian;
-                tempMovesLearned = jobManager.LoadJob(ValidJobs.Barbarian).classSkills;
-                tempMob.playerJobs.Add(AddJob(tempJob, tempMovesLearned));
-                break;
-
-            case ValidMob.skeleton:
-                tempItemsList = new List<ValidItems>() { ValidItems.Covered_Brick, ValidItems.Yogurt_Smoothie };
-                tempMetaList = new List<ValidMoves>() { ValidMoves.Self_Perfection, ValidMoves.Validate };
-
-                tempMob = new Mob("Skeleton", tempItemsList, tempMetaList, ValidSprites.Skeleton);
-
-                tempJob = ValidJobs.Knight;
-                tempMovesLearned = jobManager.LoadJob(ValidJobs.Knight).classSkills;
-                tempMob.playerJobs.Add(AddJob(tempJob, tempMovesLearned));
-                break;
+            case ValidMob.Skeleton:
+                return currentBox.Skeleton;
+            case ValidMob.Player:
+                return currentBox.Player;
+            case ValidMob.Jelly:
+            default:
+                return currentBox.Jelly;
         }
-
-        return tempMob;
     }
 
-    public Job AddJob(ValidJobs inJob, List<ValidMoves> inMoves)
+    public int[] GetStats(ValidMob inMob)
     {
-        Job tempJob = jobManager.LoadJob(inJob);
-
-        foreach (ValidMoves moves in inMoves)
+        switch (inMob)
         {
-            tempJob.learnedSkills.Add(moves);
+            case ValidMob.Skeleton:
+                return new int[4] { 5, 4, 3, 2};
+            case ValidMob.Player:
+                return new int[4] { 5, 4, 3, 2};
+            case ValidMob.Jelly:
+            default:
+                return new int[4] { 5, 4, 3, 2};
         }
-
-        return tempJob;
     }
 }

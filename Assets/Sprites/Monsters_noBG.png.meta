@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8391b3e4157eb424dbebd2722c7f60c4
+guid: c3d1c1f36f1141742ad0d37c4d7151d9
 TextureImporter:
   serializedVersion: 2
   mipmaps:
@@ -20,7 +20,7 @@ TextureImporter:
   grayScaleToAlpha: 0
   generateCubemap: 0
   seamlessCubemap: 0
-  textureFormat: -1
+  textureFormat: -3
   maxTextureSize: 1024
   textureSettings:
     filterMode: 0
@@ -35,7 +35,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: .5, y: .5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 50
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings:
@@ -45,13 +45,13 @@ TextureImporter:
     compressionQuality: 50
   spriteSheet:
     sprites:
-    - name: Skeleton
+    - name: Jelly
       rect:
         serializedVersion: 2
-        x: 16
-        y: 672
-        width: 68
-        height: 81
+        x: 55
+        y: 710
+        width: 39
+        height: 30
       alignment: 0
       pivot: {x: .5, y: .5}
   spritePackingTag: 
