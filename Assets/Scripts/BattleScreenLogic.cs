@@ -23,17 +23,20 @@ public class BattleScreenLogic : MonoBehaviour {
         enemyTeam = GetEnemies();
 
         //Get Players
-        playerTeam = GetPlayers();
+        //playerTeam = GetPlayers();
 
         //Move objects to correct position
         MoveUnits(enemyTeam, Team.Enemy);
-        MoveUnits(playerTeam, Team.Player);
+        //MoveUnits(playerTeam, Team.Player);
 
         //Tell UI about players and enemies
-        currentUI.uiPlayerTeam = playerTeam;
+        //currentUI.uiPlayerTeam = playerTeam;
         currentUI.uiEnemyTeam = enemyTeam;
-        currentUI.uiCurrentPlayer = playerTeam[0];
+        //currentUI.uiCurrentPlayer = playerTeam[0];
         currentUI.uiCurrentEnemy = enemyTeam[0];
+
+
+        currentUI.SomeBool = true;
     }
 
     List<GameObject> GetEnemies()
@@ -86,7 +89,7 @@ public class BattleScreenLogic : MonoBehaviour {
             case Team.Enemy:
             default:
                 //Move enemies up to their own row
-                tempPosition.y += 2;
+                tempPosition.y += 3;
                 break;
             case Team.Player:
                 //Move players down to their own row
@@ -94,7 +97,14 @@ public class BattleScreenLogic : MonoBehaviour {
                 break;
         }
 
+        
         //Push the new position to the mob
         inMob.transform.position = tempPosition;
+    }
+
+    void Update()
+    {
+
+        currentUI.uiCurrentEnemy = enemyTeam[0];
     }
 }
