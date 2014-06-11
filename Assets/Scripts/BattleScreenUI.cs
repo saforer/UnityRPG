@@ -12,16 +12,84 @@ public class BattleScreenUI : MonoBehaviour {
     public MenuListing uiCurrentMenu;
     public string uiString;
     public bool playerMenuDrawing = false;
-    public bool SomeBool = false;
 
     void OnGUI()
     {
+        if (uiCurrentMenu != null)
+            DrawMenu(uiCurrentMenu);
+        if (uiCurrentPlayer != null)
+        {
+            DrawReticule(uiCurrentPlayer);
+        }
+    }
 
-     DrawReticule(uiCurrentEnemy);
+    void DrawMenu(MenuListing inMenu)
+    {
+        int depth = FindDepth(inMenu);
+
+        MenuListing tempMenu = inMenu;
+
+        while (depth>=0)
+        {
+            DrawMenuBackground(tempMenu.childrenButtons.Count,depth);
+            int i = 0;
+            foreach (MenuButton button in tempMenu.childrenButtons)
+            {
+                DrawMenuButton(button, i, depth);
+                i++;
+            }
+
+            tempMenu = tempMenu.parent;
+            depth--;
+        }
 
     }
 
-    public void DrawReticule(GameObject inUnit)
+    void DrawMenuBackground(int inCount, int inDepth)
+    {
+        //Find out where the menu should be drawn, and how big it should be
+        int HorizontalLocation = 10 + (100 * inDepth);
+        int BackgroundHeight = (50 * inCount);
+
+        //Scope out how big the box should be
+        Rect drawWhere = new Rect(HorizontalLocation, 10, 100, BackgroundHeight);
+
+        Texture backgroundTexture = Resources.Load("MenuBox") as Texture;
+
+        //Actually draw the background
+        GUI.DrawTexture(drawWhere, backgroundTexture);
+    }
+
+        void DrawMenuButton(MenuButton inButton, int buttonNumber, int buttonDepth)
+    {
+        //Find out where the button should be drawn
+        int HorizontalLocation = 10 + (100 * buttonDepth);
+        int VerticalLocation = 10 + (buttonNumber * 50);
+
+        //Scope out how big the button needs to be
+        Rect drawWhere = new Rect(HorizontalLocation, VerticalLocation, 100, 50);
+
+        //Actually draw the background of the button
+        GUI.DrawTexture(drawWhere, inButton.CurrentTexture());
+
+        //Give the button its text, the guistyle just has centered alignment
+        GUI.Label(drawWhere, inButton.name);
+    }
+
+    int FindDepth(MenuListing inMenu)
+    {
+        int i = 0;
+        while (true)
+        {
+            if (inMenu.parent == null) break;
+            inMenu = inMenu.parent;
+            i++;
+        }
+
+        return i;
+    }
+
+    void DrawReticule(GameObject inUnit)
     {
         Bounds spriteBounds = inUnit.GetComponent<SpriteRenderer>().sprite.bounds;
         Vector3 centerObject = Camera.main.WorldToScreenPoint(new Vector3(inUnit.transform.position.x, inUnit.transform.position.y, 0));

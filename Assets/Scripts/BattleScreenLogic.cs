@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -8,13 +9,64 @@ public enum Team
     Enemy
 }
 
+public enum TurnStates
+{
+    Startup,
+    SetupMove,
+    SetupTarget,
+    Move,
+    Target,
+    CheckTurnEnd,
+    EnemyTurn,
+    Action
+}
+
 public class BattleScreenLogic : MonoBehaviour {
 
     List<GameObject> enemyTeam;
     List<GameObject> playerTeam;
+    List<GameObject> playerTurnOrder = new List<GameObject>();
     BattleScreenUI currentUI;
+    TurnStates currentState = TurnStates.Startup;
+    int selectedEnemy = -1;
+    int selectedMenuOption = 0;
+    int selectedPlayerTurn = 0;
 
-    void Start()
+
+
+    void Update()
+    {
+        switch (currentState)
+        {
+            default:
+            case TurnStates.Startup:
+                Init();
+                break;
+            case TurnStates.SetupMove:
+                SetupMove();
+                break;
+            case TurnStates.Move:
+                SelectMove();
+                break;
+            case TurnStates.SetupTarget:
+                SetupTarget();
+                break;
+            case TurnStates.Target:
+                Target();
+                break;
+            case TurnStates.CheckTurnEnd:
+                FinishTurn();
+                break;
+            case TurnStates.EnemyTurn:
+                EnemyTurn();
+                break;
+            case TurnStates.Action:
+                ActionPhase();
+                break;
+        }
+    }
+
+    void Init()
     {
         //Get UI
         currentUI = gameObject.GetComponent<BattleScreenUI>();
@@ -23,26 +75,27 @@ public class BattleScreenLogic : MonoBehaviour {
         enemyTeam = GetEnemies();
 
         //Get Players
-        //playerTeam = GetPlayers();
+        playerTeam = GetPlayers();
 
         //Move objects to correct position
         MoveUnits(enemyTeam, Team.Enemy);
-        //MoveUnits(playerTeam, Team.Player);
+        MoveUnits(playerTeam, Team.Player);
 
         //Tell UI about players and enemies
-        //currentUI.uiPlayerTeam = playerTeam;
+        currentUI.uiPlayerTeam = playerTeam;
         currentUI.uiEnemyTeam = enemyTeam;
-        //currentUI.uiCurrentPlayer = playerTeam[0];
-        currentUI.uiCurrentEnemy = enemyTeam[0];
 
+        //Find Fastest Player in the list
+        playerTurnOrder = playerTeam.OrderByDescending(player => player.GetComponent<Mob>().speed).ToList();
 
-        currentUI.SomeBool = true;
+        //End Init
+        currentState = TurnStates.SetupMove;
     }
 
     List<GameObject> GetEnemies()
     {
         List<GameObject> output = new List<GameObject>();
-        for (int i = 0; i<1; i++)
+        for (int i = 0; i<5; i++)
         {
             GameObject player = (GameObject)Resources.Load("GameObject/Mobject");
             GameObject tempMob = (GameObject)Instantiate(player, new Vector3(0, 0, 0), Quaternion.identity);
@@ -55,7 +108,7 @@ public class BattleScreenLogic : MonoBehaviour {
     List<GameObject> GetPlayers()
     {
         List<GameObject> output = new List<GameObject>();
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 5; i++)
         {
             GameObject player = (GameObject)Resources.Load("GameObject/Mobject");
             GameObject tempMob = (GameObject)Instantiate(player, new Vector3(0, 0, 0), Quaternion.identity);
@@ -65,11 +118,11 @@ public class BattleScreenLogic : MonoBehaviour {
         return output;
     }
 
-    void MoveUnits(List<GameObject> inEnemies, Team k)
+    void MoveUnits(List<GameObject> inUnitList, Team k)
     {
         int i = 0;
-        int j = inEnemies.Count;
-        foreach (GameObject mob in inEnemies)
+        int j = inUnitList.Count;
+        foreach (GameObject mob in inUnitList)
         {
             MoveUnit(mob, i, j, k);
             i++;
@@ -80,16 +133,17 @@ public class BattleScreenLogic : MonoBehaviour {
     {
         Vector3 tempPosition = Vector3.zero;
         float tempWidth = inMob.GetComponent<SpriteRenderer>().sprite.rect.width / 50;
+        float spacing = 1f;
 
-        //Move the mob right the lower in the list the mob is
-        //Move the list left for how many mobs there are total, so they can be centered
+        tempPosition.x += (i * spacing);
+        tempPosition.x -= (j * spacing) / 2;
 
         switch (k)
         {
             case Team.Enemy:
             default:
                 //Move enemies up to their own row
-                tempPosition.y += 3;
+                tempPosition.y += 2;
                 break;
             case Team.Player:
                 //Move players down to their own row
@@ -102,9 +156,43 @@ public class BattleScreenLogic : MonoBehaviour {
         inMob.transform.position = tempPosition;
     }
 
-    void Update()
+    void SetupMove()
+    {
+        GameObject currentPlayer = playerTurnOrder[selectedPlayerTurn];
+
+        MenuListing rootMenu = currentPlayer.GetComponent<Mob>().CreateRoot();
+
+        currentUI.uiCurrentPlayer = currentPlayer;
+        currentUI.uiCurrentMenu = rootMenu;
+    }
+
+    void SelectMove()
     {
 
-        currentUI.uiCurrentEnemy = enemyTeam[0];
+    }
+
+    void SetupTarget()
+    {
+
+    }
+
+    void Target()
+    {
+
+    }
+
+    void FinishTurn()
+    {
+
+    }
+
+    void EnemyTurn()
+    {
+
+    }
+
+    void ActionPhase()
+    {
+
     }
 }
