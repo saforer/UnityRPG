@@ -83,12 +83,12 @@ public class MenuListing
         return childrenButtons[currentSelection].childMenu;
     }
 
-    public Move CurrentButtonMove()
+    public ValidMove CurrentButtonMove()
     {
         return childrenButtons[currentSelection].childMove;
     }
 
-    public Item CurrentButtonItem()
+    public ValidItem CurrentButtonItem()
     {
         return childrenButtons[currentSelection].childItem;
     }

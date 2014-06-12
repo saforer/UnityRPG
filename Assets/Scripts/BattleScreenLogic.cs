@@ -26,6 +26,7 @@ public class BattleScreenLogic : MonoBehaviour {
     List<GameObject> enemyTeam;
     List<GameObject> playerTeam;
     List<GameObject> playerTurnOrder = new List<GameObject>();
+    MenuListing currentMenu;
     BattleScreenUI currentUI;
     TurnStates currentState = TurnStates.Startup;
     int selectedEnemy = -1;
@@ -162,11 +163,73 @@ public class BattleScreenLogic : MonoBehaviour {
 
         MenuListing rootMenu = currentPlayer.GetComponent<Mob>().CreateRoot();
 
+        currentMenu = rootMenu;
         currentUI.uiCurrentPlayer = currentPlayer;
-        currentUI.uiCurrentMenu = rootMenu;
+        currentUI.uiCurrentMenu = currentMenu;
+
+        currentState = TurnStates.Move;
     }
 
     void SelectMove()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Debug.Log("------------PlayerTeam----------");
+            foreach (GameObject gobject in playerTeam)
+            {
+                Debug.Log(gobject.GetComponent<Mob>().name);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Debug.Log("------------EnemyTeam----------");
+            foreach (GameObject gobject in enemyTeam)
+            {
+                Debug.Log(gobject.GetComponent<Mob>().name);
+            }
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            currentMenu.MoveUp();
+            currentUI.uiCurrentMenu = currentMenu;
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            currentMenu.MoveDown();
+            currentUI.uiCurrentMenu = currentMenu;
+        }
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            if (currentMenu.CanGoRight())
+            {
+                currentMenu = currentMenu.MoveRight();
+                currentMenu.UpdateSelected();
+                currentUI.uiCurrentMenu = currentMenu;
+            }
+            else if (currentMenu.CanDoMove())
+            {
+                DoMove(currentMenu.CurrentButtonMove());
+            }
+            else if (currentMenu.CanUseItem())
+            {
+                UseItem(currentMenu.CurrentButtonItem());
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.X) && currentMenu.CanLeft())
+        {
+            currentMenu = currentMenu.MoveLeft();
+            currentUI.uiCurrentMenu = currentMenu;
+        }
+    }
+
+    void DoMove(ValidMove inMove)
+    {
+
+    }
+
+    void UseItem(ValidItem inItem)
     {
 
     }

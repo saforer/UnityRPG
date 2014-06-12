@@ -13,8 +13,8 @@ public class MenuButton
 {
 
     public MenuListing childMenu;
-    public Move childMove;
-    public Item childItem;
+    public ValidMove childMove;
+    public ValidItem childItem;
 
     public ButtonStates currentState = ButtonStates.Off;
 

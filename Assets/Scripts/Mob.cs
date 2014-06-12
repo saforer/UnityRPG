@@ -86,8 +86,8 @@ public class Mob : MonoBehaviour {
 
             foreach (ValidMove move in job.learnedSkills)
             {
-                Move classMove = moveManager.GetMove(move);
-                MenuButton moveButton = new MenuButton(classMove.name);
+                ValidMove classMove = move;
+                MenuButton moveButton = new MenuButton(classMove);
                 moveButton.childMove = classMove;
                 classMenu.childrenButtons.Add(moveButton);
             }
