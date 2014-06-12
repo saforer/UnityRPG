@@ -3,6 +3,14 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Item {
-    public string name;
+public class JobMgr {
+
+}
+
+public enum ValidJobs
+{
+    Barbarian,
+    Knight,
+    Wizard,
+    Ninja
 }
