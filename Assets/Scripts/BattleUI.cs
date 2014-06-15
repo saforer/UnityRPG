@@ -6,16 +6,38 @@ using System.Collections.Generic;
 public class BattleUI : MonoBehaviour {
     public List<Mob> uiPlayerTeam;
     public List<Mob> uiEnemyTeam;
+    public Mob uiCurrentPlayer;
     public Mob uiSelectedPlayer;
     public Mob uiSelectedEnemy;
     public MenuList uiPlayerMenu;
+    public Mob uiCurrentTarget;
+    public List<Mob> uiCurrentTargettedList = new List<Mob>();
+    public bool drawMenu = false;
+    public string uiText;
+    public string stepString;
 
     void OnGUI()
     {
-        if (uiPlayerMenu != null)
-        {
+        if (drawMenu)
             DrawPlayerMenu(uiPlayerMenu);
+
+        if (uiCurrentPlayer != null)
+            DrawReticule(uiCurrentPlayer, 0);
+
+        if (uiCurrentTarget != null)
+            DrawReticule(uiCurrentTarget, 0);
+
+        if (uiCurrentTargettedList.Count > 0)
+        {
+            foreach(Mob mob in uiCurrentTargettedList)
+            {
+                DrawReticule(mob, 1);
+            }
         }
+
+        GUI.Label(new Rect(760, 0, 100, 40), uiText);
+
+        GUI.Label(new Rect(760, 200, 100, 300), stepString);
     }
 
     void DrawPlayerMenu(MenuList inMenu)
@@ -84,5 +106,27 @@ public class BattleUI : MonoBehaviour {
         }
 
         return i;
+    }
+
+    public void DrawReticule(Mob inUnit, int inType)
+    {
+        Bounds spriteBounds = inUnit.GetComponent<SpriteRenderer>().sprite.bounds;
+        Vector3 centerObject = Camera.main.WorldToScreenPoint(new Vector3(inUnit.transform.position.x, inUnit.transform.position.y, 0));
+
+        //Center is now in gui coordinates 0 0 top left
+        centerObject.y = Screen.height - centerObject.y;
+
+        Vector3 topLeft = Camera.main.WorldToScreenPoint(new Vector3(spriteBounds.min.x, spriteBounds.max.y, 0));
+        Vector3 bottomRight = Camera.main.WorldToScreenPoint(new Vector3(spriteBounds.max.x, spriteBounds.min.y, 0));
+
+        topLeft.y = Screen.height - topLeft.y;
+        bottomRight.y = Screen.height - bottomRight.y;
+
+
+        Rect Location = new Rect(centerObject.x - ((bottomRight.x - topLeft.x) / 2), centerObject.y + ((bottomRight.y - topLeft.y) / 2), bottomRight.x - topLeft.x, topLeft.y - bottomRight.y);
+
+        Texture reticuleTexture = Resources.Load("Reticule") as Texture;
+
+        GUI.DrawTexture(Location, reticuleTexture);
     }
 }

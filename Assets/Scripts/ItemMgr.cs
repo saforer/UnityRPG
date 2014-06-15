@@ -6,17 +6,23 @@ using System.Collections.Generic;
 public class ItemMgr {
     public Item GetItem(ValidItem inItem)
     {
+        List<Target> outTargets = new List<Target>();
         switch (inItem)
         {
             default:
             case ValidItem.Milk:
-                return new Item("Milk");
+                outTargets.Add(new Target(1, ValidTeam.Player));
+                return new Item("Milk", inItem, outTargets);
             case ValidItem.Pancakes:
-                return new Item("Pancakes");
+                outTargets.Add(new Target(1, ValidTeam.Player));
+                return new Item("Pancakes", inItem, outTargets);
             case ValidItem.Yogurt_Smoothie:
-                return new Item("Yogurt Smoothie");
+                outTargets.Add(new Target(1, ValidTeam.Player));
+                return new Item("Yogurt Smoothie", inItem, outTargets);
             case ValidItem.Covered_Brick:
-                return new Item("Brick covered in chocolate");
+                outTargets.Add(new Target(1, ValidTeam.Player));
+                outTargets.Add(new Target(1, ValidTeam.Enemy));
+                return new Item("Chocolate Covered Brick", inItem, outTargets);
         }
     }
 }

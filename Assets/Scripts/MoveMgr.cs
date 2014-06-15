@@ -6,37 +6,54 @@ using System.Collections.Generic;
 public class MoveMgr {
     public Move GetMove(ValidMove inMove)
     {
+        List<Target> output = new List<Target>();
         switch (inMove)
         {
             default:
             case ValidMove.Attack:
-                return new Move("Attack", inMove);
+                output.Add(new Target(1, ValidTeam.Enemy));
+                return new Move("Attack", inMove, output);
             case ValidMove.Akujiki:
-                return new Move("Akujiki", inMove);
+                output.Add(new Target(1, ValidTeam.Enemy));
+                return new Move("Akujiki", inMove, output);
             case ValidMove.BodyGuard:
-                return new Move("Body Guard", inMove);
+                output.Add(new Target(1, ValidTeam.Player));
+                return new Move("Body Guard", inMove, output);
             case ValidMove.Break:
-                return new Move("Break", inMove);
+                output.Add(new Target(1, ValidTeam.Enemy));
+                return new Move("Break", inMove, output);
             case ValidMove.Fire_Wall:
-                return new Move("Fire Wall", inMove);
+                output.Add(new Target(3, ValidTeam.Enemy));
+                return new Move("Fire Wall", inMove, output);
             case ValidMove.Hunker_Down:
-                return new Move("Hunker Down", inMove);
+                output.Add(new Target(0, ValidTeam.Player));
+                return new Move("Hunker Down", inMove, output);
             case ValidMove.Ice_Shard:
-                return new Move("Ice Shard", inMove);
+                output.Add(new Target(3, ValidTeam.Enemy));
+                return new Move("Ice Shard", inMove, output);
             case ValidMove.Run:
-                return new Move("Run", inMove);
+                output.Add(new Target(0, ValidTeam.Player));
+                return new Move("Run", inMove, output);
             case ValidMove.Self_Perfection:
-                return new Move("Self Perfection", inMove);
+                output.Add(new Target(1, ValidTeam.Player));
+                return new Move("Self Perfection", inMove, output);
             case ValidMove.Slam:
-                return new Move("Slam", inMove);
+                output.Add(new Target(1, ValidTeam.Enemy));
+                return new Move("Slam", inMove, output);
             case ValidMove.Smash:
-                return new Move("Smash", inMove);
+                output.Add(new Target(1, ValidTeam.Enemy));
+                return new Move("Smash", inMove, output);
             case ValidMove.Telekinesis:
-                return new Move("Telekinesis", inMove);
+                output.Add(new Target(2, ValidTeam.Enemy));
+                return new Move("Telekinesis", inMove, output);
             case ValidMove.Validate:
-                return new Move("Validate", inMove);
+                output.Add(new Target(1, ValidTeam.Enemy));
+                return new Move("Validate", inMove, output);
         }
     }
+
+
+
 }
 
 public enum ValidMove

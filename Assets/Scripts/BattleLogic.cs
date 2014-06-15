@@ -11,13 +11,29 @@ public class BattleLogic : MonoBehaviour {
     List<Mob> playerTeam;
     List<Mob> enemyTeam;
     List<Mob> playerTurnOrder;
+    List<Mob> enemyTurnOrder;
+    
 
     int currentPlayerInt = 0;
 
-
     MenuList currentMenu;
 
-    BattleState currentState = BattleState.Init;
+    List<Target> moveTargets;
+    List<Mob> validTargets = new List<Mob>();
+    List<Mob> mobTargetable;
+
+    int currentTargetSet = 0;
+    int currentTargettedMob = 0;
+
+    List<BattleStep> playerActionList;
+    List<BattleStep> enemyActionList;
+    List<BattleStep> finalActionList;
+
+    bool usingMove = false;
+    ValidMove moveToUse;
+    ValidItem itemToUse;
+
+    public BattleState currentState = BattleState.Init;
 
 
 
@@ -41,6 +57,8 @@ public class BattleLogic : MonoBehaviour {
 
         UpdateUI();
 
+        playerActionList = new List<BattleStep>();
+
         currentState = BattleState.SetupMenu;
     }
 
@@ -48,7 +66,7 @@ public class BattleLogic : MonoBehaviour {
     {
         currentUI.uiPlayerTeam = playerTeam;
         currentUI.uiEnemyTeam = enemyTeam;
-        currentUI.uiSelectedPlayer = playerTurnOrder[currentPlayerInt];
+        currentUI.uiCurrentPlayer = playerTurnOrder[currentPlayerInt];
         currentUI.uiPlayerMenu = currentMenu;
     }
 
@@ -80,12 +98,15 @@ public class BattleLogic : MonoBehaviour {
                 Action();
                 break;
         }
+        currentUI.uiText = currentState.ToString();
     }
 
     void MenuSetup()
     {
+        currentUI.uiCurrentTarget = null;
         currentMenu = playerTurnOrder[currentPlayerInt].CreatePlayerRoot();
         currentUI.uiPlayerMenu = currentMenu;
+        currentUI.drawMenu = true;
         
 
         currentState = BattleState.Menu;
@@ -113,11 +134,14 @@ public class BattleLogic : MonoBehaviour {
             }
             else if (currentMenu.CanMove())
             {
-                DoMove(currentMenu.GetMove());
+                moveToUse = currentMenu.GetMove();
+                GetMoveCount(currentMenu.GetMove());
             }
             else if (currentMenu.CanItem())
             {
-                UseItem(currentMenu.GetItem());
+                
+                itemToUse = currentMenu.GetItem();
+                GetItemCount(currentMenu.GetItem());
             }
         }
 
@@ -126,53 +150,144 @@ public class BattleLogic : MonoBehaviour {
             currentMenu = currentMenu.GoLeft();
             UpdateUI();
         }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Debug.Log("------------PlayerTeam----------");
-            foreach (Mob mob in playerTeam)
-            {
-                Debug.Log(mob.name);
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            Debug.Log("------------EnemyTeam----------");
-            foreach (Mob mob in enemyTeam)
-            {
-                Debug.Log(mob.name);
-            }
-        }
     }
 
-    void DoMove(ValidMove inMove)
+    void GetMoveCount(ValidMove inMove)
     {
-        Debug.Log(inMove);
-    }
-
-    void UseItem(ValidItem inItem)
-    {
-        Debug.Log(inItem);
-    }
-
-    void TargetSetup()
-    {
-
+        MoveMgr movemgr = new MoveMgr();
+        moveTargets = movemgr.GetMove(inMove).neededTargets;
+        usingMove = true;
 
         currentState = BattleState.SetupTarget;
     }
 
+    void GetItemCount(ValidItem inItem)
+    {
+        ItemMgr itemmgr = new ItemMgr();
+        moveTargets = itemmgr.GetItem(inItem).neededTargets;
+        usingMove = false;
+
+        currentState = BattleState.SetupTarget;
+    }
+
+    void TargetSetup()
+    {
+        validTargets = new List<Mob>();
+        currentUI.drawMenu = false;
+        currentTargettedMob = 0;
+        
+
+        mobTargetable = new List<Mob>();
+
+        if ((moveTargets[currentTargetSet].teamTargetted == ValidTeam.Player) || (moveTargets[currentTargetSet].teamTargetted == ValidTeam.All))
+        {
+            foreach (Mob player in playerTeam)
+            {
+                mobTargetable.Add(player);
+            }
+        }
+
+        if ((moveTargets[currentTargetSet].teamTargetted == ValidTeam.Enemy) || (moveTargets[currentTargetSet].teamTargetted == ValidTeam.All))
+        {
+            foreach (Mob enemy in enemyTeam)
+            {
+                mobTargetable.Add(enemy);
+            }
+        }
+
+        currentUI.uiCurrentTarget = mobTargetable[currentTargettedMob];
+        currentState = BattleState.Target;
+    }
+
     void Target()
     {
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            if (currentTargettedMob > 0)
+            {
+                currentTargettedMob--;
+                
+            }
+            else
+            {
+                currentTargettedMob = 0;
+            }
+            currentUI.uiCurrentTarget = mobTargetable[currentTargettedMob];
+        }
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            if (currentTargettedMob < mobTargetable.Count-1)
+            {
+                currentTargettedMob++;
+            }
+            else
+            {
+                currentTargettedMob = mobTargetable.Count-1;
+            }
+            currentUI.uiCurrentTarget = mobTargetable[currentTargettedMob];
+        }
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            if (validTargets.Contains(mobTargetable[currentTargettedMob]))
+            {
+                validTargets.Remove(mobTargetable[currentTargettedMob]);
+            }
+            else
+            {
+                validTargets.Add(mobTargetable[currentTargettedMob]);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            currentUI.uiCurrentTarget = null;
 
+            currentState = BattleState.SetupMenu;
+        }
+        if (moveTargets[currentTargetSet].numberTargetted == validTargets.Count)
+        {
+            if (moveTargets.Count-1 > currentTargetSet)
+            {
+                currentTargetSet++;
+            }
+            else 
+            {
+                if (usingMove) playerActionList.Add(new BattleStep(playerTurnOrder[currentPlayerInt], validTargets, moveToUse));
+                if (!usingMove) playerActionList.Add(new BattleStep(playerTurnOrder[currentPlayerInt], validTargets, itemToUse));
+
+                currentUI.stepString = "-------";
+
+                foreach(BattleStep step in playerActionList)
+                {
+                    currentUI.stepString += step.ToString();
+                }
+
+                currentState = BattleState.EndPlayerStep;
+            }
+        }
     }
 
     void EndPlayer()
     {
-
+        validTargets = new List<Mob>();
+        mobTargetable = new List<Mob>();
+        
+        if (playerTurnOrder.Count-1 == currentPlayerInt)
+        {
+            currentState = BattleState.EnemyStep;
+        }
+        else
+        {
+            currentPlayerInt++;
+            UpdateUI();
+            currentState = BattleState.SetupMenu;
+        }
     }
 
     void EnemyTurn()
     {
+
+
+
 
     }
 
@@ -186,20 +301,34 @@ public class BattleLogic : MonoBehaviour {
         List<Mob> tempList = new List<Mob>();
         GameObject tempMobject;
         ValidMob toMake;
-        switch (teamIn)
-        {
-            case ValidTeam.Enemy:
-                toMake = ValidMob.Jelly;
-                break;
-            default:
-            case ValidTeam.Player:
-                toMake = ValidMob.Player;
-                break;
-        }
 
-        tempMobject = Instantiate(Resources.Load("GameObject/Mobject"), Vector3.zero, Quaternion.identity) as GameObject;
-        mobmgr.CreateMob(tempMobject, toMake);
-        tempList.Add(tempMobject.GetComponent<Mob>());
+
+        for (int i = 0; i < 5; i++)
+        {
+            switch (teamIn)
+            {
+                case ValidTeam.Enemy:
+                    switch (Random.Range(0, 2))
+                    {
+                        default:
+                        case 0:
+                            toMake = ValidMob.Jelly;
+                            break;
+                        case 1:
+                            toMake = ValidMob.Skeleton;
+                            break;
+                    }
+                    break;
+                default:
+                case ValidTeam.Player:
+                    toMake = ValidMob.Player;
+                    break;
+            }
+
+            tempMobject = Instantiate(Resources.Load("GameObject/Mobject"), Vector3.zero, Quaternion.identity) as GameObject;
+            mobmgr.CreateMob(tempMobject, toMake);
+            tempList.Add(tempMobject.GetComponent<Mob>());
+        }
 
         return tempList;
     }
@@ -218,7 +347,7 @@ public class BattleLogic : MonoBehaviour {
     void MoveUnit(Mob inMob, int i, int j, ValidTeam inTeam)
     {
         Vector3 tempPos = Vector3.zero;
-        float spacing = .9f;
+        float spacing = 1.2f;
 
         tempPos.x += (i * spacing);
         tempPos.x -= (j * spacing) / 2;
@@ -241,7 +370,8 @@ public class BattleLogic : MonoBehaviour {
 public enum ValidTeam
 {
     Player,
-    Enemy
+    Enemy,
+    All
 }
 
 public enum BattleState
