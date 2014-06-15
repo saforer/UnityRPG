@@ -80,4 +80,60 @@ public class Mob : MonoBehaviour {
     {
         return new MenuButton(ValidMove.Run);
     }
+
+    public BattleStep ThinkOfTurnToDo(Mob caster, List<Mob> inPlayer, List<Mob> inEnemy)
+    {
+        ValidMove moveToUse = ValidMove.Attack;
+
+        List<ValidMove> moveCanUse = new List<ValidMove>();
+
+        //Get a list of all the moves possible to be done
+        moveCanUse.Add(ValidMove.Attack);
+
+        foreach (Job job in playerJob)
+        {
+            foreach (ValidMove move in job.learnedMove)
+            {
+                moveCanUse.Add(move);
+            }
+        }
+
+        //All the metamagic that can be done
+        foreach (ValidMove move in metaMoveList)
+        {
+            moveCanUse.Add(move);
+        }
+
+        moveToUse = moveCanUse[Random.Range(0, moveCanUse.Count)];
+
+        List<Mob> outTarget = new List<Mob>();
+        MoveMgr movemgr = new MoveMgr();
+
+        List<Target> targetList = movemgr.GetMove(moveToUse).neededTargets;
+
+        foreach (Target target in targetList)
+        {
+            switch (target.teamTargetted)
+            {
+                default:
+                case ValidTeam.Player:
+                    outTarget.AddRange(inPlayer);
+                    break;
+                case ValidTeam.Enemy:
+                    outTarget.AddRange(inEnemy);
+                    break;
+                case ValidTeam.All:
+                    outTarget.AddRange(inEnemy);
+                    outTarget.AddRange(inPlayer);
+                    break;
+            }
+        }
+
+        while (outTarget.Count > targetList[0].numberTargetted)
+        {
+            outTarget.RemoveAt(Random.Range(0, outTarget.Count));
+        }
+
+        return new BattleStep(caster, outTarget, moveToUse);
+    }
 }

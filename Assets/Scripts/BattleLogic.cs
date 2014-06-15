@@ -107,7 +107,8 @@ public class BattleLogic : MonoBehaviour {
         currentMenu = playerTurnOrder[currentPlayerInt].CreatePlayerRoot();
         currentUI.uiPlayerMenu = currentMenu;
         currentUI.drawMenu = true;
-        
+
+        enemyActionList = new List<BattleStep>();
 
         currentState = BattleState.Menu;
     }
@@ -285,15 +286,34 @@ public class BattleLogic : MonoBehaviour {
 
     void EnemyTurn()
     {
+        foreach (Mob enemy in enemyTeam)
+        {
+            enemyActionList.Add(enemy.ThinkOfTurnToDo(enemy, playerTeam, enemyTeam));
+        }
 
-
-
-
+        currentState = BattleState.ActionStep;
     }
 
     void Action()
     {
+        List<BattleStep> tempActionList = new List<BattleStep>();
+        tempActionList.AddRange(playerActionList);
+        playerActionList.Clear();
+        tempActionList.AddRange(enemyActionList);
+        enemyActionList.Clear();
+        finalActionList = tempActionList.OrderByDescending(mob => mob.speed).ToList();
 
+        foreach (BattleStep step in finalActionList)
+        {
+            Debug.Log(step.ToString());
+        }
+
+
+
+
+
+        finalActionList.Clear();
+        currentState = BattleState.SetupMenu;
     }
 
     List<Mob> GetTeam(ValidTeam teamIn)
